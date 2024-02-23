@@ -25,6 +25,6 @@ CMD ["node", "index.js"]
 
 FROM nginx:stable-alpine AS prod-pwa-stage
 WORKDIR /app
-COPY --from=build-pwa-stage /src/dist/pwa /usr/share/nginx/html.
+COPY --from=build-pwa-stage /src/dist/pwa /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

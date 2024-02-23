@@ -19,7 +19,7 @@ services:
     restart: always
     container_name: vbank_client
     ports:
-      - "3000:3000"
+      - "8080:80"
     depends_on:
       - backend
 
@@ -34,8 +34,6 @@ services:
       MYSQL_DATABASE: "bank"
       MYSQL_ROOT_PASSWORD: "password"
       MYSQL_ROOT_USER: "root"
-    ports:
-      - "3306:3306"
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
@@ -46,6 +44,6 @@ services:
       PMA_PORT: 3306
       MYSQL_ROOT_PASSWORD: "password"
     ports:
-      - "8080:80"
+      - "7070:80"
     depends_on:
       - db

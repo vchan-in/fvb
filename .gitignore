@@ -161,7 +161,7 @@ cython_debug/
 
 
 
-######################################## Client-side Gitingore
+######################################## Client-side Gitignore
 .DS_Store
 .thumbs.db
 node_modules
@@ -199,3 +199,8 @@ yarn-error.log*
 
 # local .env files
 .env.local*
+
+
+######################################## Build Gitignore
+# Skip Bazel for now
+*.bazel*

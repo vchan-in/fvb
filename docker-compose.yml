@@ -22,6 +22,19 @@ services:
       - "8080:80"
     depends_on:
       - backend
+  
+  client-dev:
+    build:
+      context: ./src/client
+      dockerfile: Dockerfile
+      target: develop-stage
+    command: /bin/sh -c "npm i && quasar upgrade -i && quasar dev -m pwa -p 9000"
+    restart: always
+    container_name: vbank_client_dev
+    ports:
+      - "8081:9000"
+    depends_on:
+      - backend
 
   db:
     image: mysql:8.0

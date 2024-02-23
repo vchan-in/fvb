@@ -1,0 +1,14 @@
+{
+  "appId": "in.vchan.vbank",
+  "appName": "vbank",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "http",
+    "cleartext": true,
+    "allowNavigation": [
+      "http://127.0.0.1:8000/*"
+    ]
+  }
+}

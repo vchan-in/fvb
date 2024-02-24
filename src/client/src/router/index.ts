@@ -54,7 +54,6 @@ export default route(function (/* { store, ssrContext } */) {
           const is_valid = await useAuthStore().verify_token();
           if (!is_valid) {
             console.log('Token is not valid!');
-            next('/');
           } else {
             // Add the token to the axios header
             api.defaults.headers.common = { Authorization: `Bearer ${token}` };
@@ -62,7 +61,6 @@ export default route(function (/* { store, ssrContext } */) {
         }
       } catch (error) {
         console.error('Error:', error);
-        next('/');
       }
     }
     next();

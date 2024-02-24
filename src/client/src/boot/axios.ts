@@ -14,7 +14,7 @@ declare module '@vue/runtime-core' {
 // good idea to move this instance creation inside of the
 // "export default () => {}" function below (which runs individually
 // for each client)
-const VBANK_BACKEND_BASEURL = process.env.VBANK_BACKEND_BASEURL ?? 'http://backend';
+const VBANK_BACKEND_BASEURL = process.env.VBANK_BACKEND_BASEURL ?? 'http://localhost';
 const api = axios.create({ baseURL: VBANK_BACKEND_BASEURL+':8000' });
 
 export default boot(({ app }) => {

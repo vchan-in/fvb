@@ -24,6 +24,7 @@ while True:
         engine.connect()
         break
     except Exception as e:
+        print(f"Connecting to database {VBANK_DATABASE_NAME} at {VBANK_DATABASE_HOST} as {VBANK_DATABASE_USER} with password {VBANK_DATABASE_PASSWORD}")
         print("Database not ready yet, retrying in 5 seconds")
         time.sleep(5)
 

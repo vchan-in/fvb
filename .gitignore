@@ -205,3 +205,7 @@ yarn-error.log*
 ######################################## Build Gitignore
 # Skip Bazel for now
 *.bazel*
+
+
+######################################## Skip deployment specific files
+src/client/src-capacitor/capacitor.config.json

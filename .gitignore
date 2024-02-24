@@ -161,7 +161,7 @@ cython_debug/
 
 
 
-######################################## Client-side Gitingore
+######################################## Client-side Gitignore
 .DS_Store
 .thumbs.db
 node_modules
@@ -192,6 +192,7 @@ yarn-error.log*
 
 # Editor directories and files
 .idea
+.vscode
 *.suo
 *.ntvs*
 *.njsproj
@@ -199,3 +200,12 @@ yarn-error.log*
 
 # local .env files
 .env.local*
+
+
+######################################## Build Gitignore
+# Skip Bazel for now
+*.bazel*
+
+
+######################################## Skip deployment specific files
+src/client/src-capacitor/capacitor.config.json

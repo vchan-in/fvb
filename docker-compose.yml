@@ -1,40 +1,49 @@
-version: '3'
+version: "3"
 
 services:
-#   backend:
-#     build: ./app/
-#     command: "uvicorn main_docker:app --host 0.0.0.0 --port 8000 --reload"
-#     ports:
-#       - 8000:8000
-# #    volumes:
-# #      - ./src:/app
-
-  mysql:
-    image: mysql:8.0
+  backend:
+    build: ./src/backend
     restart: always
-#    command:
-#      - '--secure-file-priv=""'
-#      - '--local-infile=1'
-    environment:
-      MYSQL_DATABASE: 'bank'
-      MYSQL_ROOT_PASSWORD: 'password'
-      MYSQL_ROOT_USER: 'root'
+    container_name: vbank_backend
+    command: "uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
     ports:
-      - '3306:3306'
-#    volumes:
-#          - dbdata:/var/lib/mysql
-# 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    restart: always
-    environment:
-      PMA_HOST: mysql
-      PMA_PORT: 3306
-      MYSQL_ROOT_PASSWORD: 'password'
-    ports:
-      - '8080:80'
+      - "8000:8000"
     depends_on:
-      - mysql
+      - db
 
-volumes:
-    dbdata:
+  client:
+    build:
+      context: ./src/client
+      dockerfile: Dockerfile
+      target: prod-pwa-stage
+    restart: always
+    container_name: vbank_client
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+
+  db:
+    image: mysql:8.0
+    container_name: vbank_db
+    restart: always
+    #    command:
+    #      - '--secure-file-priv=""'
+    #      - '--local-infile=1'
+    environment:
+      MYSQL_DATABASE: "bank"
+      MYSQL_ROOT_PASSWORD: "password"
+      MYSQL_ROOT_USER: "root"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: vbank_phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: "password"
+    ports:
+      - "7070:80"
+    depends_on:
+      - db

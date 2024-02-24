@@ -1,0 +1,13 @@
+{
+  "name": "vbank",
+  "version": "24.02",
+  "description": "A Vulnerable Bank App",
+  "author": "Vaishno Chaitanya <17123227+vchan-in@users.noreply.github.com>",
+  "private": true,
+  "dependencies": {
+    "@capacitor/android": "^5.0.5",
+    "@capacitor/app": "^5.0.0",
+    "@capacitor/cli": "^5.0.0",
+    "@capacitor/core": "^5.0.0"
+  }
+}

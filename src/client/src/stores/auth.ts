@@ -7,6 +7,7 @@ import { api } from 'src/boot/axios';
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     username: '',
+    userid: '',
     admin: false,
   }),
   getters: {},
@@ -18,7 +19,7 @@ export const useAuthStore = defineStore('auth', {
       });
       if (response.status === 200) {
         // Set the token in the cookie with a 1 day expiry and secure flag
-        Cookies.set('access_token', response.data.access_token, { expires: 1, secure: true, sameSite: 'Strict' });
+        Cookies.set('access_token', response.data.access_token, { expires: 1, sameSite: 'Strict' });
         return true;
       }
 
@@ -50,6 +51,7 @@ export const useAuthStore = defineStore('auth', {
       // Clear the entire store
       this.username = '';
       this.admin = false;
+      this.userid = '';
     },
 
     async current_user_info() {
@@ -57,6 +59,7 @@ export const useAuthStore = defineStore('auth', {
         const response = await api.get('/api/v1/users/me');
         if (response.status === 200) {
           this.username = response.data.data.username;
+          this.userid = response.data.data.id;
           if (response.data.data.admin == 1) {
             this.admin = true;
           }

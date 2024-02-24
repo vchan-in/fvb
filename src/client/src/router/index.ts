@@ -10,7 +10,6 @@ import routes from './routes';
 import { useAuthStore } from 'src/stores/auth';
 import { Cookies } from 'quasar';
 import { api } from 'src/boot/axios';
-import { au } from 'app/dist/spa/assets/index.f8127df2';
 
 /*
  * If not building with SSR mode, you can

@@ -1,7 +1,7 @@
 <template>
   <q-page class="row justify-evenly q-my-lg">
     <div class="col-12 col-md-8 col-lg-6">
-      <q-card class="q-pa-md" flat bordered style="min-width: 30em;">
+      <q-card flat bordered>
         <q-card-section>
           <section class="q-mb-xl">
             <div class="text-h6">Transfer Money</div>

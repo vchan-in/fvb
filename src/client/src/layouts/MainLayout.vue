@@ -4,7 +4,7 @@
       <q-toolbar>
         <q-btn flat dense round icon="menu" aria-label="Menu" @click="leftDrawerOpen = !leftDrawerOpen" />
         <q-toolbar-title>
-          {{ username ? 'Hi, ' + username : 'vBank' }}
+            {{ currentUser ? 'Hi, ' + currentUser : 'vBank' }}
         </q-toolbar-title>
         <div class="text-subtitle2">{{ todaysDate }}</div>
       </q-toolbar>
@@ -13,7 +13,7 @@
     <q-drawer v-model="leftDrawerOpen" show-if-above :width="250" :breakpoint="600">
       <q-scroll-area style="height: calc(100% - 10em); margin-top: 10em; border-right: 1px solid #ddd">
         <q-list padding>
-          <q-item clickable v-ripple to="/" exact>
+          <q-item clickable v-ripple to="/" exact v-if="currentUser">
             <q-item-section avatar>
               <q-icon name="home" />
             </q-item-section>
@@ -23,7 +23,7 @@
             </q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple to="/accounts" exact>
+          <q-item clickable v-ripple to="/accounts" exact v-if="currentUser">
             <q-item-section avatar>
               <q-icon name="account_balance" />
             </q-item-section>
@@ -33,7 +33,7 @@
             </q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple to="/transfer" exact>
+          <q-item clickable v-ripple to="/transfer" exact v-if="currentUser">
             <q-item-section avatar>
               <q-icon name="send" />
             </q-item-section>
@@ -43,7 +43,7 @@
             </q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple to="/transactions" exact>
+          <q-item clickable v-ripple to="/transactions" exact v-if="currentUser">
             <q-item-section avatar>
               <q-icon name="swap_horiz" />
             </q-item-section>
@@ -53,7 +53,7 @@
             </q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple to="/topup" exact disable>
+          <q-item clickable v-ripple to="/topup" exact disable v-if="currentUser">
             <q-item-section avatar>
               <q-icon name="add" />
             </q-item-section>
@@ -63,7 +63,7 @@
             </q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple to="/cards" exact disable>
+          <q-item clickable v-ripple to="/cards" exact disable v-if="currentUser">
             <q-item-section avatar>
               <q-icon name="credit_card" />
             </q-item-section>
@@ -73,7 +73,7 @@
             </q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple to="/loan" exact disable>
+          <q-item clickable v-ripple to="/loan" exact disable v-if="currentUser">
             <q-item-section avatar>
               <q-icon name="credit_card" />
             </q-item-section>
@@ -83,7 +83,7 @@
             </q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple to="/bills" exact disable>
+          <q-item clickable v-ripple to="/bills" exact disable v-if="currentUser">
             <q-item-section avatar>
               <q-icon name="receipt" />
             </q-item-section>
@@ -93,19 +93,19 @@
             </q-item-section>
           </q-item>
 
-          <q-separator class="q-mb-sm" />
-          <q-item clickable v-ripple to="/signup" exact v-if="!username">
+          <q-separator class="q-mb-sm" v-if="currentUser"/>
+
+          <q-item clickable class="bg-red-1 text-red" v-ripple to="/logout" exact v-if="currentUser">
             <q-item-section avatar>
-              <q-icon name="person_add" />
+              <q-icon name="logout" />
             </q-item-section>
 
             <q-item-section>
-              Sign Up
+              Logout
             </q-item-section>
           </q-item>
 
-          <!-- Login and Logout buttons -->
-          <q-item clickable v-ripple to="/login" exact v-if="!username">
+          <q-item clickable v-ripple to="/login" exact v-if="!currentUser">
             <q-item-section avatar>
               <q-icon name="login" />
             </q-item-section>
@@ -115,13 +115,13 @@
             </q-item-section>
           </q-item>
 
-          <q-item clickable class="bg-red-1 text-red" v-ripple to="/logout" exact>
+          <q-item clickable v-ripple to="/signup" exact v-if="!currentUser">
             <q-item-section avatar>
-              <q-icon name="logout" />
+              <q-icon name="person_add" />
             </q-item-section>
 
             <q-item-section>
-              Logout
+              Sign Up
             </q-item-section>
           </q-item>
 
@@ -147,44 +147,48 @@
 import { date, Notify } from 'quasar'
 import { defineComponent, ref, onMounted } from 'vue'
 import { api } from 'src/boot/axios';
+import { useAuthStore } from '../stores/auth';
 
 export default defineComponent({
   name: 'MainLayout',
 
   data() {
     return {
-      leftDrawerOpen: false
+      leftDrawerOpen: false,
     }
   },
 
-  setup() {
-    const username = ref('');
+  // setup() {
+  //   let currentUsername = useAuthStore().username
 
-    onMounted(async () => {
-      try {
-        const userResponse = await api.get('/api/v1/users/me');
-        username.value = userResponse.data.data.username;
-        if (userResponse.status === 200) {
-          Notify.create({
-            message: 'Welcome back, ' + userResponse.data.data.username,
-            color: 'positive',
-            icon: 'check',
-          });
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    });
+  //   onMounted(async () => {
+  //     try {
+  //       const userResponse = await api.get('/api/v1/users/me');
+  //       currentUsername.value = userResponse.data.data.username;
+  //       if (userResponse.status === 200) {
+  //         Notify.create({
+  //           message: 'Welcome back, ' + userResponse.data.data.username,
+  //           color: 'positive',
+  //           icon: 'check',
+  //         });
+  //       }
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   });
 
-    return {
-      username
-    }
-  },
+  //   return {
+  //     currentUsername,
+  //   }
+  // },
 
   computed: {
     todaysDate() {
       let timeStamp = Date.now()
       return date.formatDate(timeStamp, 'dddd D MMMM')
+    },
+    currentUser() {
+      return useAuthStore().username
     },
   },
 

@@ -12,10 +12,11 @@
             <q-card-section>
               <q-form @submit="login">
                 <q-input filled v-model="username" label="Username" lazy-rules
-                  :rules="[val => !!val || 'Please enter your username']" />
+                  :rules="[val => !!val || 'Please enter your username']" type="text" autocomplete="username"
+                  />
 
-                <q-input filled v-model="password" label="Password" lazy-rules aria-autocomplete="both"
-                  :rules="[val => !!val || 'Please enter your password']" type="password" />
+                <q-input filled v-model="password" label="Password" lazy-rules
+                  :rules="[val => !!val || 'Please enter your password']" type="password" autocomplete="current-password" />
 
                 <!-- Forget Password -->
                 <q-item clickable v-ripple to="/forgetpassword" exact disable>
@@ -45,7 +46,7 @@
 </template>
 
 <script>
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import { useAuthStore } from '../stores/auth';
 import { Notify } from 'quasar'
 import { useRouter } from 'vue-router'

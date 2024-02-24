@@ -6,11 +6,7 @@ import { api } from 'src/boot/axios';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    email: '',
     username: '',
-    dob: '',
-    address: '',
-    phone: '',
     admin: false,
   }),
   getters: {},
@@ -52,11 +48,7 @@ export const useAuthStore = defineStore('auth', {
       // Remove the token from the cookie
       Cookies.remove('access_token');
       // Clear the entire store
-      this.email = '';
       this.username = '';
-      this.dob = '';
-      this.address = '';
-      this.phone = '';
       this.admin = false;
     },
 
@@ -64,11 +56,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         const response = await api.get('/api/v1/users/me');
         if (response.status === 200) {
-          this.email = response.data.data.email;
           this.username = response.data.data.username;
-          this.dob = response.data.data.dob;
-          this.address = response.data.data.address;
-          this.phone = response.data.data.phone;
           if (response.data.data.admin == 1) {
             this.admin = true;
           }

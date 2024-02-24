@@ -23,7 +23,6 @@ services:
     depends_on:
       - backend
 
-
   db:
     image: mysql:8.0
     container_name: vbank_db

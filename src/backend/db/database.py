@@ -12,7 +12,6 @@ while True:
     except Exception as e:
         print("Database not ready yet, retrying in 5 seconds")
         time.sleep(5)
-# engine = create_engine("mysql+mysqlconnector://root:password@db:3306/bank")
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()

@@ -61,6 +61,9 @@ export default route(function (/* { store, ssrContext } */) {
           }
         }
 
+        // User is authenticated, then get the user info from the server and store it in the store
+        await useAuthStore().current_user_info();
+
       } catch (error) {
         console.error('Error:', error);
       }

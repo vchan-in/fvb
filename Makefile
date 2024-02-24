@@ -18,3 +18,12 @@ build:
 	@echo "Building backend..."
 	cd src/backend && docker build -t src/backend .
 	docker tag src/backend:latest src/backend:$(shell date +%s)
+
+docker-up-build:
+	@echo "Starting docker containers with build..."
+	docker-compose down
+	docker-compose up -d --build
+
+docker-up:
+	@echo "Starting docker containers..."
+	docker-compose up -d

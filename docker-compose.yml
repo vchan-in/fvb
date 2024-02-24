@@ -40,7 +40,7 @@ services:
     container_name: vbank_phpmyadmin
     restart: always
     environment:
-      PMA_HOST: mysql
+      PMA_HOST: db
       PMA_PORT: 3306
       MYSQL_ROOT_PASSWORD: "password"
     ports:

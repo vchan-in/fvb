@@ -14,7 +14,7 @@
                 <q-input filled v-model="username" label="Username" lazy-rules
                   :rules="[val => !!val || 'Please enter your username']" />
 
-                <q-input filled v-model="password" label="Password" lazy-rules
+                <q-input filled v-model="password" label="Password" lazy-rules aria-autocomplete="both"
                   :rules="[val => !!val || 'Please enter your password']" type="password" />
 
                 <!-- Forget Password -->

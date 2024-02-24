@@ -24,7 +24,7 @@ services:
     restart: always
     container_name: vbank_client
     environment:
-      VBANK_BACKEND_API_URL: ${VBANK_BACKEND_BASEURL:-http://backend}
+      VBANK_BACKEND_API_URL: ${VBANK_BACKEND_BASEURL:-http://localhost}
     ports:
       - "8080:80"
     depends_on:

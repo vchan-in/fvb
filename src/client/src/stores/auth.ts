@@ -4,47 +4,28 @@ import { defineStore } from 'pinia';
 import { Cookies } from 'quasar';
 import { api } from 'src/boot/axios';
 
-/*
-POST /api/v1/auth/token
-
-Request
- {
-    "username": "vaishno",
-    "password":"qwerty"
- }
-
-Response
-  {
-    "access_token": access_token,
-    "token_type": "bearer"
-  }
-*/
-
-
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    access_token: '',
+    email: '',
+    username: '',
+    dob: '',
+    address: '',
+    phone: '',
+    admin: false,
   }),
-  getters: {
-    get_access_token: (state) => state.access_token,
-  },
+  getters: {},
   actions: {
-    set_access_token(token: string) {
-      this.access_token = token;
-      // Set the token in the Authorization header
-      api.defaults.headers.common.Authorization = `Bearer ${token}`;
-    },
-
     async login(username: string, password: string): Promise<boolean> {
       const response = await api.post('/api/v1/auth/token', {
         username: username,
         password: password,
       });
       if (response.status === 200) {
-        // Set the token in the cookie with a 1 day expiry
-        Cookies.set('access_token', response.data.access_token, { expires: 1 });
+        // Set the token in the cookie with a 1 day expiry and secure flag
+        Cookies.set('access_token', response.data.access_token, { expires: 1, secure: true, sameSite: 'Strict' });
         return true;
       }
+
       return false;
     },
 
@@ -70,8 +51,31 @@ export const useAuthStore = defineStore('auth', {
     logout() {
       // Remove the token from the cookie
       Cookies.remove('access_token');
-      // Remove the token from the store
-      this.set_access_token('');
+      // Clear the entire store
+      this.email = '';
+      this.username = '';
+      this.dob = '';
+      this.address = '';
+      this.phone = '';
+      this.admin = false;
+    },
+
+    async current_user_info() {
+      try {
+        const response = await api.get('/api/v1/users/me');
+        if (response.status === 200) {
+          this.email = response.data.data.email;
+          this.username = response.data.data.username;
+          this.dob = response.data.data.dob;
+          this.address = response.data.data.address;
+          this.phone = response.data.data.phone;
+          if (response.data.data.admin == 1) {
+            this.admin = true;
+          }
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
     },
   },
 });

@@ -11,21 +11,6 @@
 const { configure } = require('quasar/wrappers');
 const path = require('path');
 
-const fs = require('fs');
-const dotenv = require('dotenv');
-require('dotenv').config();
-
-const envPath = path.resolve(__dirname, '../../.env.dev'); // Pointing to the monorepo root
-const fallbackEnvPath = path.resolve(__dirname, '../../.env');
-
-let envConfig
-if (fs.existsSync(envPath)) {
-  envConfig = dotenv.config({ path: envPath }).parsed;
-} else {
-  envConfig = dotenv.config({ path: fallbackEnvPath }).parsed;
-}
-envConfig = dotenv.config({ path: envPath }).parsed;
-
 module.exports = configure(function (/* ctx */) {
   return {
     eslint: {
@@ -79,7 +64,8 @@ module.exports = configure(function (/* ctx */) {
       // publicPath: '/',
       // analyze: true,
       env: {
-        ...envConfig,
+        VBANK_BACKEND_BASEURL: process.env.VBANK_BACKEND_BASEURL,
+        VBANK_BACKEND_PORT: process.env.VBANK_BACKEND_PORT,
       },
       // rawDefine: {}
       // ignorePublicFolder: true,

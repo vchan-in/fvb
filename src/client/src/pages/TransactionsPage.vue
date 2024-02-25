@@ -58,8 +58,8 @@ export default {
         sort: (a, b) => new Date(b).getTime() - new Date(a).getTime(), // Modified sort function
         sortOrder: 'ad'
       },
-      { name: 'from_account_id', align: 'left', label: 'From Account', field: 'from_account_id' },
-      { name: 'to_account_id', align: 'left', label: 'To Account', field: 'to_account_id' },
+      { name: 'from_account_id', align: 'left', label: 'From Account', field: 'fromAccount' },
+      { name: 'to_account_id', align: 'left', label: 'To Account', field: 'toAccount' },
       { name: 'amount', align: 'right', label: 'Amount', field: 'amount', sortable: true },
       { name: 'description', align: 'left', label: 'Description', field: 'description' }
     ]

@@ -14,7 +14,7 @@ from strawberry.types.info import RootValueType
 
 from data.models import User as UserModel
 from data.serializers import UserGQL, AccountGQL, TransactionCreate, TransactionResponseGQL
-from handlers.main import register_user_handler, get_current_user_handler, get_all_users_handler, get_user_by_username_handler, create_account_handler, get_all_accounts_of_user_handler, create_transaction_handler
+from handlers.main import register_user_handler, get_current_user_handler, get_all_users_handler, get_user_by_username_handler, create_account_handler, get_all_accounts_of_user_handler, create_transaction_handler, get_all_accounts_handler, get_all_transactions_handler
 from db.database import SessionLocal, Session as DBSession
 
 
@@ -80,6 +80,9 @@ class Query:
                 username
                 email
                 admin
+                dob
+                phone
+                address
             }
         }
         '''
@@ -88,7 +91,7 @@ class Query:
             if not user_context:
                 raise Exception("Not authenticated")
             user =  await get_user_by_username_handler(DBSession, username)
-            return UserGQL(id=user.id, admin=user.admin, username=user.username, email=user.email)
+            return UserGQL(id=user.id, admin=user.admin, username=user.username, email=user.email, dob=user.dob, phone=user.phone, address=user.address)
         except Exception as e:
             return e
     
@@ -105,14 +108,81 @@ class Query:
                 username
                 email
                 admin
+                dob
+                phone
+                address
             }
         }
         '''
         try:
-            user_context, _ = await info.context.user
+            user_context = await info.context.user
             if not user_context:
                 raise Exception("Not authenticated")
-            return await get_all_users_handler(DBSession)
+            users = await get_all_users_handler(DBSession)
+            # Convert users to UserGQL
+            users_gql = []
+            for user in users:
+                users_gql.append(UserGQL(id=user.id, admin=user.admin, username=user.username, email=user.email, dob=user.dob, phone=user.phone, address=user.address))
+            return users_gql
+        except Exception as e:
+            return e
+        
+    # Return all accounts
+    @strawberry.field
+    async def get_all_accounts(self, info: Info) -> list[AccountGQL]:
+        '''
+        Get all accounts
+
+        Example usage:
+
+        query {
+            get_all_accounts {
+                account_number
+                balance
+                user_id
+            }
+        }
+        '''
+        try:
+            user_context = await info.context.user
+            if not user_context:
+                raise Exception("Not authenticated")
+            accounts = await get_all_accounts_handler(DBSession)
+            accounts_gql = []
+            for account in accounts:
+                if account.user_id == None:
+                    account.user_id = 0
+                accounts_gql.append(AccountGQL(id=account.id, balance=account.balance, user_id=account.user_id))
+            return accounts_gql
+        except Exception as e:
+            return e
+    
+    # Return all transactions
+    @strawberry.field
+    async def get_all_transactions(self, info: Info) -> list[TransactionResponseGQL]:
+        '''
+        Get all transactions
+
+        Example usage:
+
+        query {
+            get_all_transactions {
+                from_account
+                to_account
+                amount
+                description
+            }
+        }
+        '''
+        try:
+            user_context = await info.context.user
+            if not user_context:
+                raise Exception("Not authenticated")
+            transactions = await get_all_transactions_handler(DBSession)
+            transactions_gql = []
+            for transaction in transactions:
+                transactions_gql.append(TransactionResponseGQL(from_account=transaction.from_account_id, to_account=transaction.to_account_id, amount=transaction.amount, description=transaction.description, timestamp=transaction.timestamp))
+            return transactions_gql
         except Exception as e:
             return e
     

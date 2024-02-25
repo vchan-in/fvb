@@ -1,4 +1,6 @@
 FROM node:18.0-alpine3.15 AS global-deps-stage
+ARG VBANK_BACKEND_BASEURL
+ARG VBANK_BACKEND_PORT
 RUN npm i -g @quasar/cli@latest
 
 FROM global-deps-stage AS develop-stage
@@ -10,18 +12,8 @@ COPY . .
 FROM develop-stage AS local-deps-stage
 RUN npm i
 
-FROM local-deps-stage AS build-ssr-stage
-RUN quasar build -m ssr
-
 FROM local-deps-stage AS build-pwa-stage
-RUN quasar build -m pwa
-
-FROM node:lts-alpine AS prod-ssr-stage
-WORKDIR /app
-COPY --from=build-ssr-stage /src/dist/ssr .
-RUN npm i -g serve
-EXPOSE 3000
-CMD ["node", "index.js"]
+RUN VBANK_BACKEND_BASEURL=${VBANK_BACKEND_BASEURL} VBANK_BACKEND_PORT=${VBANK_BACKEND_PORT} quasar build -m pwa
 
 FROM nginx:stable-alpine AS prod-pwa-stage
 WORKDIR /app

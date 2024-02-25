@@ -5,7 +5,12 @@ services:
     build: ./src/backend
     restart: always
     container_name: vbank_backend
-    command: "uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+    command: 'uvicorn main:app --host 0.0.0.0 --port ${VBANK_BACKEND_PORT:-8000} --reload'
+    environment:
+      VBANK_DATABASE_HOST: ${VBANK_BACKEND_HOST:-db}
+      VBANK_DATABASE_NAME: ${VBANK_DATABASE_NAME:-vbank}
+      VBANK_DATABASE_USER: ${VBANK_DATABASE_USER:-vbank}
+      VBANK_DATABASE_PASSWORD: ${VBANK_DATABASE_PASSWORD:-vbank}
     ports:
       - "8000:8000"
     depends_on:
@@ -16,6 +21,9 @@ services:
       context: ./src/client
       dockerfile: Dockerfile
       target: prod-pwa-stage
+      args:
+        VBANK_BACKEND_BASEURL: ${VBANK_BACKEND_BASEURL:-http://192.168.0.183}
+        VBANK_BACKEND_PORT: ${VBANK_BACKEND_PORT:-8000}
     restart: always
     container_name: vbank_client
     ports:
@@ -31,9 +39,11 @@ services:
     #      - '--secure-file-priv=""'
     #      - '--local-infile=1'
     environment:
-      MYSQL_DATABASE: "bank"
-      MYSQL_ROOT_PASSWORD: "password"
-      MYSQL_ROOT_USER: "root"
+      MYSQL_DATABASE: ${VBANK_DATABASE_NAME:-vbank}
+      MYSQL_ROOT_USER: ${VBANK_DATABASE_USER:-root}
+      MYSQL_ROOT_PASSWORD: ${VBANK_DATABASE_PASSWORD:-vbank}
+    ports:
+      - "3306:3306"
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
@@ -42,7 +52,7 @@ services:
     environment:
       PMA_HOST: db
       PMA_PORT: 3306
-      MYSQL_ROOT_PASSWORD: "password"
+      MYSQL_ROOT_PASSWORD: ${VBANK_DATABASE_PASSWORD:-vbank}
     ports:
       - "7070:80"
     depends_on:

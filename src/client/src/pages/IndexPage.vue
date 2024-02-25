@@ -9,7 +9,7 @@
 
             <q-card-section>
               <div class="text-overline text-orange-9">Total Balance</div>
-              <div class="text-h2 q-mt-sm q-mb-xs">₹ {{ totalBalance }}</div>
+              <div class="text-h2 q-mt-sm q-mb-xs">$ {{ totalBalance }}</div>
             </q-card-section>
 
             <q-card-actions>

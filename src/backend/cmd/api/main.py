@@ -207,7 +207,7 @@ async def create_transaction(request: TransactionCreate, db: Session = Depends(g
 #
 
 @router.get("/users/me", response_model=User, dependencies=[Depends(JWTBearer())])
-async def read_users_me(authorization: Annotated[list[str] | None, Header()] = None):
+async def get_users_me(authorization: Annotated[list[str] | None, Header()] = None):
     '''
     Get my user details
 
@@ -232,9 +232,9 @@ async def read_users_me(authorization: Annotated[list[str] | None, Header()] = N
         return JSONResponse(status_code=400, content={"status": "error", "message": str(e)})
     return JSONResponse(status_code=404, content={"status": "error", "message": "User not found"})
 
-@router.get("/users/{username}/info")
-async def get_user(username: str, db: Session = Depends(get_db)):
-    user = get_user_by_username_handler(db, username)
+@router.get("/users/{username}/info", dependencies=[Depends(JWTBearer())])
+async def get_user_by_username(username: str, db: Session = Depends(get_db)):
+    user = await get_user_by_username_handler(db, username)
     if user:
         return JSONResponse(status_code=200, content={"status": "success", "message": "User retrieved successfully", "data": jsonable_encoder(user)})
     return JSONResponse(status_code=404, content={"status": "error", "message": "User not found"})

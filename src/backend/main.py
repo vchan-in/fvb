@@ -4,17 +4,17 @@ from starlette.middleware.cors import CORSMiddleware
 from cmd.api.main import router as customer_router
 from cmd.api.admin import router as admin_router
 
-from cmd.seed.main import generate_tables
+from cmd.seed.main import seed
 
 from handlers.gql import graphql_app
 
 
-# Generate bank database tables
-generate_tables()
+# Seed the database
+seed()
 
 
 
-methods = ["GET", "POST", "DELETE"]
+methods = ["GET", "POST", "DELETE", "OPTIONS", "PUT", "PATCH"]
 
 app = FastAPI(redirect_slashes=False, title="vBank API", description="A vulnerable bank API", version="24.02")
 

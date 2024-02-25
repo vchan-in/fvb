@@ -202,7 +202,40 @@ async def create_transaction_handler(db: Session, request: TransactionCreate, us
     except Exception as e:
         db.rollback()
         raise e
+    
+# Delete user handler for admin
+async def admin_delete_user_handler(db: Session, user_id: int):
+    '''
+    Delete user
 
+    Example usage:
+
+        admin_delete_user_handler(user_id=1)
+
+    Output:
+
+        {
+            "status": "success",
+            "message": "User deleted successfully"
+        }
+    '''
+    try:
+        # Replace all the ForeignKey references to the user with Null
+        accounts = db.query(AccountModel).filter(AccountModel.user_id == user_id).all()
+        for account in accounts:
+            account.user_id = 0
+        db.commit()
+
+        # Delete the user
+        user = db.query(UserModel).filter(UserModel.id == user_id).first()
+        if user:
+            db.delete(user)
+            db.commit()
+            return True
+        return False
+    except Exception as e:
+        db.rollback()
+        raise e
 
 #
 #
@@ -239,18 +272,19 @@ def get_password_hash_handler(password):
 async def get_user_handler(db, username: str) -> UserModel:
     return db.query(UserModel).filter(UserModel.username == username).first()
 
+
 async def get_user_me_handler(token: str) -> User:
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
         if username is None:
-            raise "Username not found"
+            raise Exception("Username not found")
         token_data = TokenData(username=username)
     except JWTError:
-        raise "JWT error"
+        raise Exception("JWT error")
     user = await get_user_handler(DBSession, username=token_data.username)
     if user is None:
-        raise "User not found"
+        raise Exception("User not found")
     return user
 
 async def get_current_user_handler(token: Annotated[str, Depends(oauth2_scheme)]):
@@ -279,12 +313,6 @@ async def get_user_by_username_handler(db: Session, username: str):
     '''
     return db.query(UserModel).filter(UserModel.username == username).first()
 
-async def get_all_users_handler(db: Session):
-    '''
-    Get all users
-    '''
-    return db.query(UserModel).all()
-
 # Get all accounts of a user handler
 async def get_all_accounts_of_user_handler(db: Session, user_id: int):
     '''
@@ -308,3 +336,28 @@ async def get_all_transactions_of_user_handler(db: Session, user_id: int):
             list_of_transactions.append(transaction)
         # list_of_transactions.extend(transactions)
     return list_of_transactions
+
+
+#
+#
+# Get All Queries Handlers for Admin
+#
+#
+
+async def get_all_users_handler(db: Session):
+    '''
+    Get all users
+    '''
+    return db.query(UserModel).all()
+
+async def get_all_accounts_handler(db: Session):
+    '''
+    Get all accounts
+    '''
+    return db.query(AccountModel).all()
+
+async def get_all_transactions_handler(db: Session):
+    '''
+    Get all transactions
+    '''
+    return db.query(TransactionModel).all()

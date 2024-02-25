@@ -15,7 +15,7 @@ class User(Base):
     password = Column(String(50))
     hashed_password = Column(String(100))
     dob = Column(DateTime(timezone=True), default=datetime.utcnow)
-    phone = Column(String(20), nullable=True)
+    phone = Column(String(50), nullable=True)
     address = Column(String(100), nullable=True)
 
     accounts = relationship("Account", back_populates="user", cascade="all, delete")

@@ -9,18 +9,34 @@
           </section>
           <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
             <q-select filled v-model="transferData.from_account_id" label="From Account *" lazy-rules
-              :options="accounts.map(account => ({ label: account.id, value: account.id }))" hint="Select an account"
-              :rules="[val => val !== null || 'Please select an account']" />
+              :options="accounts.map(account => ({ label: account.id + ' Balance: ' + account.balance , value: account.id }))" hint="Select an account"
+              :rules="[val => val !== null || 'Please select an account']" >
+              <template v-slot:prepend>
+                <q-icon name="account_balance_wallet" />
+              </template>
+            </q-select>
 
             <q-input filled v-model="transferData.amount" label="Amount *" type="number" lazy-rules
-              :rules="[val => val !== null && val !== '' || 'Please enter the amount']" />
+              :rules="[val => val !== null && val !== '' || 'Please enter the amount']" >
+              <template v-slot:prepend>
+                <q-icon name="attach_money" />
+              </template>
+            </q-input>
 
             <q-input filled v-model="transferData.description" label="Description *" hint="Enter a description" lazy-rules
-              :rules="[val => val && val.length > 0 || 'Please enter a description']" />
+              :rules="[val => val && val.length > 0 || 'Please enter a description']" >
+              <template v-slot:prepend>
+                <q-icon name="description" />
+              </template>
+            </q-input>
 
             <q-input filled v-model="transferData.to_account_id" label="To Account ID *"
               hint="Enter the recipient's account ID" lazy-rules
-              :rules="[val => val && val.length > 0 || 'Please enter the recipient\'s account ID']" />
+              :rules="[val => val && val.length > 0 || 'Please enter the recipient\'s account ID']" >
+              <template v-slot:prepend>
+                <q-icon name="account_balance_wallet" />
+              </template>
+            </q-input>
 
             <div>
               <q-btn label="Submit" type="submit" color="primary" />
@@ -74,7 +90,6 @@ export default {
             color: 'positive',
             icon: 'check',
           });
-          this.onReset()
           this.$router.push('/transactions')
         } else {
           throw new Error(response.data.message)

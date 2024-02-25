@@ -11,6 +11,8 @@
 const { configure } = require('quasar/wrappers');
 const path = require('path');
 
+const env = require('dotenv').config({ path: '.env' }).parsed;
+
 module.exports = configure(function (/* ctx */) {
   return {
     eslint: {
@@ -64,8 +66,7 @@ module.exports = configure(function (/* ctx */) {
       // publicPath: '/',
       // analyze: true,
       env: {
-        VBANK_BACKEND_BASEURL: process.env.VBANK_BACKEND_BASEURL,
-        VBANK_BACKEND_PORT: process.env.VBANK_BACKEND_PORT,
+        ...env,
       },
       // rawDefine: {}
       // ignorePublicFolder: true,

@@ -97,6 +97,7 @@ class TransactionResponseGQL():
     to_account: str
     amount: float
     description: Optional[str]
+    timestamp: str
 
 class AccountResponse(BaseModel):
     account: Account

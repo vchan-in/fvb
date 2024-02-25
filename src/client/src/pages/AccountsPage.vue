@@ -72,12 +72,10 @@
 import { useQuasar, Notify } from 'quasar'
 import { ref, onMounted } from 'vue'
 import { api } from 'src/boot/axios';
-import { useRouter } from 'vue-router'
 
 export default {
   setup() {
     const $q = useQuasar()
-    const router = useRouter()
     const columns = [
       {
         name: 'id',
@@ -114,7 +112,7 @@ export default {
 
     onMounted(async () => {
       try {
-        refreshData()
+        await refreshData()
       } catch (error) {
         console.error(error)
       }

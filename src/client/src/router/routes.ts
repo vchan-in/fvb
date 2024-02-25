@@ -60,6 +60,18 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
+  // Admin page
+  {
+    path: '/admin',
+    name: 'AdminPage',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/admin/IndexPage.vue') }],
+    meta: {
+      requiresAuth: true,
+      title: 'Admin',
+    },
+  },
+
   {
     path: '/login',
     name: 'LoginPage',

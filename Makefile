@@ -2,6 +2,8 @@ include .env
 
 build-source:
 	@echo "Building backend..."
+	-@cp .env src\backend\.env
+	-@copy .env src\backend\.env
 	python -m venv .venv
 	-@source .venv/bin/activate && pip install -r requirements.txt
 	-@.venv\Scripts\activate && pip install -r requirements.txt
@@ -15,6 +17,8 @@ build-source:
 
 build-docker:
 	@echo "Building backend..."
+	-@cp .env src\backend\.env
+	-@copy .env src\backend\.env
 	cd src/backend && docker build -t src/backend .
 	docker tag src/backend:latest src/backend:$(shell date +%s)
 	@echo "Building client..."
@@ -33,6 +37,8 @@ build-docker-up:
 
 dev-backend:
 	@echo "Starting backend development server..."
+	-@cp .env src\backend\.env
+	-@copy .env src\backend\.env
 	-@source .venv/bin/activate && cd src/backend && uvicorn main:app --host 0.0.0.0 --port ${VBANK_BACKEND_PORT} --reload
 	-@.venv\Scripts\activate && cd src/backend && uvicorn main:app --host 0.0.0.0 --port ${VBANK_BACKEND_PORT} --reload
 	

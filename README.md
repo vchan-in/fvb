@@ -29,16 +29,16 @@ Follow these steps to set up the project:
 6. Build the source by running `make install`
 7. Start the backend development server `make dev-backend`
 8. Start the client development server,
-    
+
     * Web Application: `make dev-client`
     * Android Studios: `make dev-client-android`
-    * IOS XCode: - [ ] ToDo
-    * Desktop Application: - [ ] ToDo
+    * IOS XCode: ToDo
+    * Desktop Application: ToDo
 
 ### Docker Container
-1. Create .env file from template.env file.
+1. Create `.env` file from `template.env` file.
 1. Install [Docker](https://www.docker.com)
-2. Build and run the project using `make build-docker` and followed by `make build-docker-up`
+2. Build and run the project using `make docker-build` and followed by `make docker-up`
 3. Browse to http://localhost:8080 (on macOS and Windows browse to http://192.168.99.100:8080 if you are using docker-machine instead of the native docker installation)
 
 ## Description
@@ -91,10 +91,10 @@ Contributions are what make the open source community such an amazing place to l
 
 - Project homepage: https://github.com/vchan-in/vbank
 - Repository: https://github.com/vchan-in/vbank.git
-- Issue tracker: https://github.com/vchan-in/vBank/issues
+- Issue tracker: https://github.com/vchan-in/vbank/issues
 
 ## Licensing
 
-"The code in this project is licensed under MIT license."
+The code in this project is licensed under MIT license.
 
-This program is free software: You can redistribute it and/or modify it under the terms of the MIT License. vBank and any contributions are Copyright © by Vaishno Chaitanya & the vBank contributors 2024 -
+This program is free software: You can redistribute it and/or modify it under the terms of the MIT License. vBank and any contributions are Copyright © by Vaishno Chaitanya & the vBank contributors 2023 - 2024.

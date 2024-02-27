@@ -37,28 +37,42 @@
                       <div class="col-auto q-mb-md">
                         <q-icon name="people" size="3em" />
                         <div class="text-h5">Users</div>
-                        <div class="text-h3">
-                          {{ users.length || 0 }}
+                        <div class="text-h3" v-if="users.length">
+                          {{ users.length }}
+                        </div>
+                        <div class="text-h3" v-else>
+                          <q-skeleton :type="text" />
                         </div>
                       </div>
                       <div class="col-auto q-mb-md">
                         <q-icon name="account_balance" size="3em" />
                         <div class="text-h5">Accounts</div>
-                        <div class="text-h3">
-                          {{ accounts.length || 0 }}
+                        <div class="text-h3" v-if="accounts.length">
+                          {{ accounts.length }}
+                        </div>
+                        <div class="text-h3" v-else>
+                          <q-skeleton :type="text" />
                         </div>
                       </div>
                       <div class="col-auto q-mb-md">
                         <q-icon name="swap_horiz" size="3em" />
                         <div class="text-h5">Transactions</div>
-                        <div class="text-h3">
-                          {{ transactions.length || 0 }}
+                        <div class="text-h3" v-if="transactions.length">
+                          {{ transactions.length }}
+                        </div>
+                        <div class="text-h3" v-else>
+                          <q-skeleton :type="text" />
                         </div>
                       </div>
                       <div class="col-auto q-mb-md">
                         <q-icon name="account_balance_wallet" size="3em" />
                         <div class="text-h5">Holding</div>
-                        <div class="text-h3">${{ totalBalance }}</div>
+                        <div class="text-h3" v-if="totalBalance">
+                          ${{ totalBalance }}
+                        </div>
+                        <div class="text-h3" v-else>
+                          <q-skeleton :type="text" />
+                        </div>
                       </div>
                     </div>
                   </q-card-section>

@@ -80,7 +80,11 @@ This project includes the following features:
 - **Admin Panel**: Admins can manage users, view transaction logs, and perform other administrative tasks.
 
 ## Screenshots
+Few of many...
 
+- Dashboard ![Screenshot](/screenshots/dashboard.jpg)
+- Customer Accounts Page ![Screenshot](/screenshots/accounts.jpg)
+- Admin Panel ![Screenshot](/screenshots/admin.jpg)
 
 
 ## Contributing

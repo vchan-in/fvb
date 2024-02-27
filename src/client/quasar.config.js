@@ -66,6 +66,8 @@ module.exports = configure(function (/* ctx */) {
       // publicPath: '/',
       // analyze: true,
       env: {
+        VBANK_BACKEND_BASEURL: process.env.VBANK_BACKEND_BASEURL,
+        VBANK_BACKEND_PORT: process.env.VBANK_BACKEND_PORT,
         ...env,
       },
       // rawDefine: {}

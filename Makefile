@@ -1,6 +1,6 @@
 include .env
 
-build-source:
+install:
 	@echo "Building backend..."
 	-@cp .env src\backend\.env
 	-@copy .env src\backend\.env
@@ -15,26 +15,6 @@ build-source:
 	@echo "Run 'make dev-client-android' to start the client server with android studios."
 	@echo Finished Reading? CTRL+C to exit.
 
-build-docker:
-	@echo "Building backend..."
-	-@cp .env src\backend\.env
-	-@copy .env src\backend\.env
-	cd src/backend && docker build -t src/backend .
-	docker tag src/backend:latest src/backend:$(shell date +%s)
-	@echo "Building client..."
-	-@cp .env src\client\.env
-	-@copy .env src\client\.env
-	cd src/client && docker build -t src/client .
-	docker tag src/client:latest src/client:$(shell date +%s)
-	@echo "Success!"
-	@echo "Run 'make build-docker-up' to start the docker containers."
-	@echo Finished Reading? CTRL+C to exit.
-
-build-docker-up:
-	@echo "Starting docker containers with build..."
-	docker-compose build --no-cache
-	docker-compose up -d
-
 dev-backend:
 	@echo "Starting backend development server..."
 	-@cp .env src\backend\.env
@@ -46,10 +26,20 @@ dev-client:
 	@echo "Starting client development server..."
 	-@cp .env src\client\.env
 	-@copy .env src\client\.env
-	npm i && cd src/client && quasar dev -m pwa -p 9000
+	npm i && cd src/client && quasar dev -m pwa -p 9000 VBANK_BACKEND_BASEURL=${VBANK_BACKEND_BASEURL} VBANK_BACKEND_PORT=${VBANK_BACKEND_PORT}
 
 dev-client-android:
 	@echo "Starting client development server with android studios..."
 	-@cp .env src\client\.env
 	-@copy .env src\client\.env
-	npm i && cd src/client && quasar dev -m capacitor -T android
+	npm i && cd src/client && quasar dev -m capacitor -T android VBANK_BACKEND_BASEURL=${VBANK_BACKEND_BASEURL} VBANK_BACKEND_PORT=${VBANK_BACKEND_PORT}
+
+docker-up:
+	@echo "Starting docker containers with build..."
+	docker-compose down
+	-@cp .env src\backend\.env
+	-@copy .env src\backend\.env
+	-@cp .env src\client\.env
+	-@copy .env src\client\.env
+	docker-compose build --no-cache
+	docker-compose up -d

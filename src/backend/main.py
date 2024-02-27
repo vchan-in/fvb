@@ -9,8 +9,8 @@ from cmd.seed.main import seed
 from handlers.gql import graphql_app
 
 
-# Seed the database
-seed()
+# # Seed the database # ToDo: Remove this
+# seed()
 
 
 

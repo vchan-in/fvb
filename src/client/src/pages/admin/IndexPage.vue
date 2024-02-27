@@ -111,7 +111,7 @@
               <span class="text-subtitle1">
                 Here you can view all accounts created by users.
               </span>
-            </q-card-section>
+          </q-card-section>
           <div class="col-12 col-md-8 col-lg-6">
             <div class="row justify-between q-mb-lg">
               <div class="col-6 q-pr-md">

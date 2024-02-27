@@ -6,8 +6,10 @@ from data import models
 from db.database import engine
 from sqlalchemy.orm import Session
 from handlers.main import get_password_hash_handler
+from sqlalchemy import text
 
 fake = Faker()
+
 
 def generate_tables():
     models.Base.metadata.create_all(bind=engine)
@@ -42,118 +44,123 @@ def seed_default_users():
         print(f"ERROR:    {e}")
         return
     
-def seed_fake_users():
-    # Dont create fake users if there are already 10 users
-    with Session(engine) as session:
-        user_count = session.query(models.User).count()
-        if user_count >= 10:
-            print("INFO:     Fake users already exists")
-            return
+    print("INFO:     Default users created")
+
+
+# Create a seed.sql file with the fake data on 143 users, each user with 1 to 5 accounts and each account with 5 to 10 transactions with other accounts. No data should be duplicate, so maintain a list to avoid duplicates
+def seed_fake_data_sql():
+    users = []
+    accounts = []
+    transactions = []
+
+    # Generate 143 fake users
+    # Start with user ID 3
+    user_id = 2
+    for _ in range(1143):
+        id = user_id + 1
+        admin = 0
+        username = fake.user_name()
+        password = fake.password(length=8, special_chars=True, digits=True, upper_case=True, lower_case=True)
+        hashed_password = get_password_hash_handler(password)
+        dob = fake.date_of_birth(minimum_age=18, maximum_age=90).strftime('%Y-%m-%d %H:%M:%S')
+        email = fake.email()
+        phone = fake.phone_number()
+        address = fake.address()
+        # Check if user already exists
+        if username not in [user['username'] for user in users]:
+            users.append({"id": id, "admin": admin, "username": username, "password": password, "hashed_password": hashed_password, "dob": dob, "email": email, "phone": phone, "address": address})
+            user_id += 1
+            print(f"INFO:     {username} created")
+        else:
+            continue
+    print ("INFO:     Fake users generated")
+
+    # Generate between 1 and 5 accounts for each user
+    account_count = 0
+    for user in users:
+        # Get user id from the user string
+        for _ in range(fake.random_int(1, 5)):
+            account_id = f"VBANK{str(random.randint(1000, 9999))}{datetime.now().strftime('%Y%d%H%M%S')}"
+            balance = fake.random_int(100, 1000)
+            # Check if account already exists
+            if account_id not in [acc['id'] for acc in accounts]:
+                accounts.append({"id": account_id, "balance": balance, "user_id": user["id"]})
+                account_count += 1
+                print(f"INFO:     Account {account_id} created")
+            else:
+                continue
+    print("INFO:     Fake accounts generated")
+
+    # Create between 5 to 10 transactions for each account with other accounts of different users
+    for account in accounts:
+        for _ in range(fake.random_int(5, 10)):
+            amount = fake.random_int(1, account["balance"])
+            description = fake.sentence(nb_words=2)[:15]
+            from_account_id = account["id"]
+            to_account_id = random.choice([acc["id"] for acc in accounts if acc["id"] != account["id"]])
+            timestamp = fake.date_time_this_year().strftime('%Y-%m-%d %H:%M:%S')
+            transactions.append({"amount": amount, "description": description, "from_account_id": from_account_id, "to_account_id": to_account_id, "timestamp": timestamp})
+    print("INFO:     Fake transactions generated")
+    
+    # Write the fake data to a seed.txt file
+    with open("seed.txt", "w") as f:
+        # First, write all users to the file
+        for user in users:
+            f.write(f"INSERT INTO users (id, admin, username, password, hashed_password, dob, email, phone, address) VALUES ({user['id']}, {user['admin']}, '{user['username']}', '{user['password']}', '{user['hashed_password']}', '{user['dob']}', '{user['email']}', '{user['phone']}', '{user['address']}');\n")
         
-    # Generate 43 fake users and thier accounts and transactions
-    print("INFO:     Creating fake users. This may take a while")
-    for _ in range(43):
-        try:
-            with Session(engine) as session:
-                admin = 0
-                username = fake.user_name()
-                password = fake.password(length=8, special_chars=True, digits=True, upper_case=True, lower_case=True)
-                hashed_password = get_password_hash_handler(password)
-                email = fake.email()
-                phone = fake.phone_number()
-                address = fake.address()
-
-                user = models.User(admin=admin, username=username, password=password, hashed_password=hashed_password, email=email, phone=phone, address=address)
-                session.add(user)
-                session.commit()
-        except Exception as e:
-            print(f"ERROR:    {e}")
-            return
-    print("INFO:     Users created")
-
-
-def seed_fake_accounts():
-    # Dont create fake accounts if there are already 50 accounts
-    with Session(engine) as session:
-        account_count = session.query(models.Account).count()
-        if account_count >= 50:
-            print("INFO:     Fake accounts already exists")
-            return
+        # Then, write all accounts to the file
+        for account in accounts:
+            f.write(f"INSERT INTO accounts (id, balance, user_id) VALUES ('{account['id']}', {account['balance']}, {account['user_id']});\n")
         
-    # Create between 1 and 5 accounts for each user and add between 100 and 1000 balance to each account
-    print("INFO:     Creating fake accounts. This may take a while")
+        # Finally, write all transactions to the file
+        for transaction in transactions:
+            f.write(f"INSERT INTO transactions (amount, description, from_account_id, to_account_id, timestamp) VALUES ({transaction['amount']}, '{transaction['description']}', '{transaction['from_account_id']}', '{transaction['to_account_id']}', '{transaction['timestamp']}');\n")
+    
+    print("INFO:     Fake data written to seed.sql file")
+
+
+def insert_fake_data_txt():
     try:
-        with Session(engine) as session:
-            users = session.query(models.User).all()
-            for user in users:
-                for _ in range(fake.random_int(1, 5)):
-                    ''' 
-                    Generate account number
-                    Account number logic:
-                    1. Prefix: VBANK
-                    2. Random 4 digit number
-                    3. Suffix: Timestamp format: YYYYDDHHMMSS
-                    '''
+        with open("seed.txt", "r") as f:
+            statements = f.read().split(';')
+            with Session(engine) as session:
+                for statement in statements:
                     try:
-                        account_id = f"VBANK{str(random.randint(1000, 9999))}{datetime.now().strftime('%Y%d%H%M%S')}"
-                        balance = fake.random_int(100, 1000)
-                        account = models.Account(id=account_id, balance=balance, user_id=user.id)
-                        session.add(account)
+                        session.execute(text(statement))
                         session.commit()
-                    except:
+                    except Exception as e:
+                        print(f"ERROR:    {e}")
                         session.rollback()
-                        continue
     except Exception as e:
         print(f"ERROR:    {e}")
-        return
-    print("INFO:     Accounts created")
 
+    print("INFO:     Fake data inserted into database")
 
-def seed_fake_transactions():
-    # Dont create fake transactions if there are already 100 transactions
-    with Session(engine) as session:
-        transaction_count = session.query(models.Transaction).count()
-        if transaction_count >= 100:
-            print("INFO:     Fake transactions already exists")
-            return
-        
-    # Create between 5 to 10 transactions for each account with other accounts of different users
-    # Check balance before creating transaction to avoid negative balance
-    print("INFO:     Creating fake transactions. This may take a while")
-    for _ in range(10):
-        try:
+# Import the vbank.sql file into the database
+def seed_vbank_sql():
+    try:
+        with open("vbank.sql", "r") as f:
+            statements = f.read().split(';')
             with Session(engine) as session:
-                accounts = session.query(models.Account).all()
-                for account in accounts:
-                    for _ in range(fake.random_int(5, 10)):
-                        if account.balance > 0:
-                            try:
-                                amount = fake.random_int(1, account.balance)
-                                description = fake.sentence(nb_words=5)
-                                from_account_id = account.id
-                                to_account_id = random.choice([acc.id for acc in accounts if acc.id != account.id])
-                                transaction = models.Transaction(amount=amount, description=description, from_account_id=from_account_id, to_account_id=to_account_id)
-                                session.add(transaction)
-                                session.commit()
-                                account.balance -= amount
-                                session.commit()
-                            except:
-                                session.rollback()
-                                continue
-                        
-        except Exception as e:
-            print(f"ERROR:    {e}")
-            return
-    print("INFO:     Transactions created")
+                for statement in statements:
+                    try:
+                        session.execute(text(statement))
+                        session.commit()
+                    except Exception as e:
+                        print(f"ERROR:    {e}")
+                        session.rollback()
+    except Exception as e:
+        print(f"ERROR:    {e}")
 
+    print("INFO:     vbank.sql file imported into database")
+    
 
 def seed():
     generate_tables()
-    seed_default_users()
-    seed_fake_users()
-    seed_fake_accounts()
-    seed_fake_transactions()
-    print("INFO:     Seed completed")
+    # seed_default_users()
+    # seed_fake_data_txt()
+    # seed_vbank_sql()
+    
 
 if __name__ == "__main__":
     seed()

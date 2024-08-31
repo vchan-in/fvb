@@ -5,14 +5,14 @@ install:
 	-@cp .env src/backend/.env
 	-@copy .env src\backend\.env
 	python -m venv .venv
-	-@source .venv/bin/activate && pip install -r requirements.txt
-	-@.venv\Scripts\activate && pip install -r requirements.txt
+	-@source .venv/bin/activate && pip install -r src/backend/requirements.txt
+	-@.venv\Scripts\activate && pip install -r src/backend/requirements.txt
 	@echo "Building client..."
 	-@cp .env src/client/.env
 	-@copy .env src\client\.env
 	npm i && cd src/client && quasar build -m pwa
-	@echo "Success! Run 'make dev-backend' to start the backend server and 'make dev-client' to start the client server."
-	@echo "Run 'make dev-client-android' to start the client server with android studios."
+	@echo "Success! Run 'make backend' to start the backend server and 'make client' to start the client server."
+	@echo "Run 'make client-android' to start the client server with android studios."
 	@echo Finished Reading? CTRL+C to exit.
 
 backend:

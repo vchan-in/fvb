@@ -72,7 +72,7 @@
           <q-item
             clickable
             v-ripple
-            to="/topup"
+            to="/deposit"
             exact
             disable
             v-if="currentUser"
@@ -81,7 +81,7 @@
               <q-icon name="add" />
             </q-item-section>
 
-            <q-item-section> Top Up </q-item-section>
+            <q-item-section> Deposit </q-item-section>
           </q-item>
 
           <q-item
@@ -184,6 +184,22 @@
             <q-item-section> Sign Up </q-item-section>
           </q-item>
         </q-list>
+
+        <q-item class="absolute-bottom">
+          <q-item-section avatar>
+            <q-icon name="info" />
+          </q-item-section>
+
+          <q-item-section>
+            <q-item-label>
+              vBank &copy; 2024
+            </q-item-label>
+            <q-item-label caption v-if="checkPing">
+              <q-icon name="check" color="green" />
+              <span>Server Online</span>
+            </q-item-label>
+          </q-item-section>
+        </q-item>
       </q-scroll-area>
 
       <q-img class="absolute-top" src="mountains.jpg" style="height: 10em">
@@ -207,6 +223,7 @@
 import { date } from 'quasar';
 import { defineComponent } from 'vue';
 import { useAuthStore } from '../stores/auth';
+import { api } from 'src/boot/axios';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -238,6 +255,12 @@ export default defineComponent({
     },
     isAdmin() {
       return useAuthStore().admin;
+    },
+    checkPing() {
+      return async () => {
+        const pingResponse = await api.get('/api/v1/ping');
+        return pingResponse.status === 200;
+      };
     },
   },
 });

@@ -26,30 +26,22 @@ client:
 	@echo "Starting client development server..."
 	-@cp .env src/client/.env
 	-@copy .env src\client\.env
-	npm i && cd src/client && quasar dev -m pwa -p 9000 VBANK_BACKEND_BASEURL=${VBANK_BACKEND_BASEURL} VBANK_BACKEND_PORT=${VBANK_BACKEND_PORT}
+	cd src/client && npm i -g @quasar/cli@latest && npm i && quasar dev -m spa -p 8080 VBANK_BACKEND_BASEURL=${VBANK_BACKEND_BASEURL} VBANK_BACKEND_PORT=${VBANK_BACKEND_PORT}
 
 client-android:
 	@echo "Starting client development server with android studios..."
 	-@cp .env src/client/.env
 	-@copy .env src\client\.env
-	npm i && cd src/client && quasar dev -m capacitor -T android VBANK_BACKEND_BASEURL=${VBANK_BACKEND_BASEURL} VBANK_BACKEND_PORT=${VBANK_BACKEND_PORT}
+	cd src/client && npm i -g @quasar/cli@latest && npm i && quasar dev -m capacitor -T android VBANK_BACKEND_BASEURL=${VBANK_BACKEND_BASEURL} VBANK_BACKEND_PORT=${VBANK_BACKEND_PORT}
 
 docker:
 	@echo "Starting docker containers with build..."
 	docker-compose down
-	-@cp .env src/backend/.env
-	-@copy .env src\backend\.env
-	-@cp .env src/client/.env
-	-@copy .env src\client\.env
 	docker compose build
 	docker compose up -d
 
 docker-dev:
-	@echo "Starting docker containers with build..."
+	@echo "Starting docker dev containers with build..."
 	docker-compose down
-	-@cp .env src/backend/.env
-	-@copy .env src\backend\.env
-	-@cp .env src/client/.env
-	-@copy .env src\client\.env
 	docker compose build --no-cache
 	docker compose up -d

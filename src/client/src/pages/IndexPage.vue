@@ -38,12 +38,12 @@
           <div class="row">
             <div class="col-6">
               <q-card class="my-card bg-red-1" flat bordered>
-                <q-btn flat class="full-width" to="/topup">
+                <q-btn flat class="full-width" to="/deposit">
                   <q-card-section>
                     <div class="icon text-h5 q-mt-sm q-mb-xs">
                       <q-icon name="account_balance" />
                     </div>
-                    <div class="text-h5 q-mt-sm q-mb-xs">TopUp</div>
+                    <div class="text-h5 q-mt-sm q-mb-xs">Deposit</div>
                     <div class="text-caption text-grey">
                       All networks available
                     </div>

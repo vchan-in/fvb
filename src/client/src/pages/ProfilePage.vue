@@ -18,7 +18,7 @@
             <q-separator class="q-mb-lg" color="q-gray-2" />
 
             <q-card-section>
-              <q-form @submit="topup">
+              <q-form @submit="deposit">
                 <q-input
                   filled
                   v-model="user.username"

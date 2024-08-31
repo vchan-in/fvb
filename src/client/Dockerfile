@@ -10,7 +10,7 @@ COPY package-lock.json ./
 COPY . .
 
 FROM develop-stage AS local-deps-stage
-RUN npm i
+RUN yarn install
 
 FROM local-deps-stage AS build-pwa-stage
 RUN VBANK_BACKEND_BASEURL=${VBANK_BACKEND_BASEURL} VBANK_BACKEND_PORT=${VBANK_BACKEND_PORT} quasar build -m pwa

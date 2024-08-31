@@ -1,18 +1,16 @@
-version: "3"
-
 services:
   backend:
     build: ./src/backend
     restart: always
     container_name: vbank_backend
-    command: 'uvicorn main:app --host 0.0.0.0 --port ${VBANK_BACKEND_PORT:-8000} --reload'
+    command: 'uvicorn main:app --host 0.0.0.0 --port ${VBANK_BACKEND_PORT:-8000} --workers 4'
     environment:
       VBANK_DATABASE_HOST: ${VBANK_BACKEND_HOST:-db}
       VBANK_DATABASE_NAME: ${VBANK_DATABASE_NAME:-vbank}
       VBANK_DATABASE_USER: ${VBANK_DATABASE_USER:-vbank}
       VBANK_DATABASE_PASSWORD: ${VBANK_DATABASE_PASSWORD:-vbank}
     ports:
-      - "8000:8000"
+      - "8000:8000"   # Change this port if you want backend to run on a different port.
     depends_on:
       - db
 

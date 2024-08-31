@@ -11,7 +11,7 @@ graphql-core==3.2.3
 greenlet==3.0.3
 h11==0.14.0
 httptools==0.6.1
-idna==3.6
+idna==3.7
 mysql-connector-python==8.3.0
 passlib==1.7.4
 pyasn1==0.5.1

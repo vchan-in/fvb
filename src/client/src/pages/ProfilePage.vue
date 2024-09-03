@@ -185,7 +185,7 @@ export default {
 
     onMounted(async () => {
       try {
-        const userResponse = await api.get('/api/v1/users/'+useAuthStore().username+'/info');
+        const userResponse = await api.get('/api/v1/users/'+useAuthStore().username);
         user.value = userResponse.data.data;
       } catch (error) {
         console.error(error);

@@ -5,6 +5,7 @@ vBank is a deliberately insecure web application based on a banking system, desi
 ## Table of Contents
 
 - [Setup](#setup)
+- [User Credentials](https://github.com/vchan-in/vbank/wiki/Credentials)
 - [Description](#description)
 - [Features](#features)
 - [Screenshots](#screenshots)
@@ -25,20 +26,20 @@ Follow these steps to set up the project:
    of the repository)
 
 4. Go into the cloned folder with `cd vbank`
-5. Create `.env` file from `template.env` file.
+5. Create `.env` file from `env.template` file.
 6. Build the source by running `make install`
-7. Start the backend development server `make dev-backend`
+7. Start the backend development server `make backend`
 8. Start the client development server,
 
-    * Web Application: `make dev-client`
-    * Android Studios: `make dev-client-android`
+    * Web Application: `make client`
+    * Android Studios: `make client-android`
     * IOS XCode: ToDo
     * Desktop Application: ToDo
 
 ### Docker Container
 1. Create `.env` file from `template.env` file.
 1. Install [Docker](https://www.docker.com)
-2. Build and run the project using `make docker-build` and followed by `make docker-up`
+2. Build and run the project using `make docker`
 3. Browse to http://localhost:8080 (on macOS and Windows browse to http://192.168.99.100:8080 if you are using docker-machine instead of the native docker installation)
 
 ## Description
@@ -55,7 +56,7 @@ This project is built with the following technologies:
 
 - **Frontend**: The frontend of the application is built with Vue.js, a popular JavaScript library for building user interfaces and Quasar Framework is used. We also use Pinia for state management and Material-UI for the design system.
 
-- **Backend**: The backend is a RESTful API built with FastAPI. It handles all the business logic and database operations.
+- **Backend**: RESTful API + GraphQL API built with FastAPI framework. It handles all the business logic and database operations.
 
 - **Database**: We use MySQL as our primary database.
 

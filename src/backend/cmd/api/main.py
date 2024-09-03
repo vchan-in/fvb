@@ -232,7 +232,8 @@ async def get_users_me(authorization: Annotated[list[str] | None, Header()] = No
         return JSONResponse(status_code=400, content={"status": "error", "message": str(e)})
     return JSONResponse(status_code=404, content={"status": "error", "message": "User not found"})
 
-@router.get("/users/{username}/info", dependencies=[Depends(JWTBearer())])
+# Get user by username route
+@router.get("/users/{username}", dependencies=[Depends(JWTBearer())])
 async def get_user_by_username(username: str, db: Session = Depends(get_db)):
     user = await get_user_by_username_handler(db, username)
     if user:
@@ -264,6 +265,16 @@ async def get_my_accounts(db: Session = Depends(get_db), authorization: Annotate
     accounts = await get_all_accounts_of_user_handler(db, current_user.id)
     if accounts:
         return JSONResponse(status_code=200, content={"status": "success", "message": "Accounts retrieved successfully", "data": jsonable_encoder(accounts)})
+    return JSONResponse(status_code=404, content={"status": "error", "message": "Accounts not found"})
+
+# Get accouts by username route
+@router.get("/accounts/{username}", dependencies=[Depends(JWTBearer())])
+async def get_accounts_by_username(username: str, db: Session = Depends(get_db)):
+    user = await get_user_by_username_handler(db, username)
+    if user:
+        accounts = await get_all_accounts_of_user_handler(db, user.id)
+        if accounts:
+            return JSONResponse(status_code=200, content={"status": "success", "message": "Accounts retrieved successfully", "data": jsonable_encoder(accounts)})
     return JSONResponse(status_code=404, content={"status": "error", "message": "Accounts not found"})
 
 # Get my transactions route

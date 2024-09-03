@@ -45,3 +45,15 @@ docker-dev:
 	docker-compose down
 	docker compose build --no-cache
 	docker compose up -d
+
+docker-dev-client:
+	@echo "Starting docker dev containers with build..."
+	docker-compose down client
+	docker compose build client --no-cache
+	docker compose up -d client
+
+docker-dev-backend:
+	@echo "Starting docker dev containers with build..."
+	docker-compose down backend
+	docker compose build backend --no-cache
+	docker compose up -d backend

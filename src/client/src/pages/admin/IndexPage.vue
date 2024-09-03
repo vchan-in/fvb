@@ -365,6 +365,11 @@ export default {
 
     onMounted(async () => {
       try {
+        // Fetch user accounts from the REST API for meta data
+        const usersResponseRest = await api.get('/api/v1/admin/users');
+        users.value = usersResponseRest.data.data;
+
+        // Fetch user accounts from the GraphQL API for Table
         const usersResponse = await api.post('/graphql', {
           query: `
             query MyQuery {
@@ -380,9 +385,13 @@ export default {
             }
           `,
         });
-        users.value = usersResponse.data.data.getAllUsers;
         usersRows.value = usersResponse.data.data.getAllUsers;
 
+        // Fetch user accounts from the REST API for meta data
+        const accountsResponseRest = await api.get('/api/v1/admin/accounts');
+        accounts.value = accountsResponseRest.data.data;
+
+        // Fetch user accounts from the GraphQL API for Table
         const accountsResponse = await api.post('/graphql', {
           query: `
             query MyQuery {
@@ -394,9 +403,13 @@ export default {
             }
           `,
         });
-        accounts.value = accountsResponse.data.data.getAllAccounts;
         accountsRows.value = accountsResponse.data.data.getAllAccounts;
 
+        // Fetch transactions from the REST API for meta data
+        const transactionsResponseRest = await api.get('/api/v1/admin/transactions');
+        transactions.value = transactionsResponseRest.data.data;
+
+        // Fetch transactions from the GraphQL API for Table
         const transactionsResponse = await api.post('/graphql', {
           query: `
             query MyQuery {
@@ -410,7 +423,6 @@ export default {
             }
           `,
         });
-        transactions.value = transactionsResponse.data.data.getAllTransactions;
         transactionsRows.value =
           transactionsResponse.data.data.getAllTransactions.reverse();
         totalAmountTransferred.value =

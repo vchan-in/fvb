@@ -72,6 +72,7 @@
 import { useQuasar, Notify } from 'quasar'
 import { ref, onMounted } from 'vue'
 import { api } from 'src/boot/axios';
+import { useAuthStore } from '../stores/auth';
 
 export default {
   setup() {
@@ -95,7 +96,7 @@ export default {
     const refreshData = async () => {
       console.log('Refreshing data...')
       try {
-        const accountsResponse = await api.get('/api/v1/accounts/me')
+        const accountsResponse = await api.get('/api/v1/accounts/'+useAuthStore().username);
         rows.value = accountsResponse.data.data.reverse()
 
         totalAccounts.value = accountsResponse.data.data.length

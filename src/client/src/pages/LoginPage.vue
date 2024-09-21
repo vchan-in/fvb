@@ -12,11 +12,11 @@
             <q-card-section>
               <q-form @submit="login">
                 <q-input filled v-model="username" label="Username" lazy-rules
-                  :rules="[val => !!val || 'Please enter your username']" type="text" autocomplete="username"
-                  />
+                  :rules="[val => !!val || 'Please enter your username']" type="text" autocomplete="username" />
 
                 <q-input filled v-model="password" label="Password" lazy-rules
-                  :rules="[val => !!val || 'Please enter your password']" type="password" autocomplete="current-password" />
+                  :rules="[val => !!val || 'Please enter your password']" type="password"
+                  autocomplete="current-password" />
 
                 <!-- Forget Password -->
                 <q-item clickable v-ripple to="/forgetpassword" exact disable>
@@ -66,6 +66,8 @@ export default {
     // Login user, if successful redirect to home page
     const login = async () => {
       try {
+        console.log('VBANK_BACKEND_BASEURL:', process.env.VBANK_BACKEND_BASEURL);
+        console.log('VBANK_BACKEND_PORT:', process.env.VBANK_BACKEND_PORT);
         if (await authStore.login(username.value, password.value)) {
           Notify.create({
             message: 'Login successful.',
@@ -85,7 +87,7 @@ export default {
 
       } catch (error) {
         Notify.create({
-          message: error.response.data.message,
+          message: 'An error occurred while logging in.' + error,
           color: 'negative',
           icon: 'warning',
         });

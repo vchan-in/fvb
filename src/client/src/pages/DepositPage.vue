@@ -96,6 +96,7 @@ export default {
   setup() {
     const accounts = ref([])
     const depositData = ref({
+      type: 'check',
       amount: '',
       description: 'Remote check deposit',
       to_account_id: '',
@@ -123,7 +124,7 @@ export default {
   methods: {
     async onSubmit() {
       try {
-        this.depositData.from_account_id = this.depositData.from_account_id.value
+        this.depositData.to_account_id = this.depositData.to_account_id.value
         const response = await api.post('/api/v1/deposit/create', this.depositData)
         if (response.status === 201) {
           Notify.create({
@@ -137,7 +138,7 @@ export default {
         }
       } catch (error) {
         Notify.create({
-          message: 'Deposit failed with error: ' + error.response.data.message,
+          message: 'Deposit failed with error: ' + error,
           color: 'negative',
           icon: 'warning',
         });

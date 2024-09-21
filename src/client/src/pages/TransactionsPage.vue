@@ -35,7 +35,22 @@
       </div>
 
       <q-table flat bordered title="My Transactions" :rows="rows" :columns="columns" color="primary" row-key="name"
-        :loading="loading" :rows-per-page-options="[10, 20, 40, 80, 0]" :filter="filter" column-sort-order="ad" />
+        :loading="loading" :rows-per-page-options="[10, 20, 40, 80, 0]" :filter="filter">
+        <template v-slot:body="props">
+          <q-tr :props="props">
+            <q-td key="timestamp" :props="props">{{ new Date(props.row.timestamp).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) }}</q-td>
+            <q-td key="from_account_id" :props="props">{{ props.row.from_account_id }}</q-td>
+            <q-td key="to_account_id" :props="props">{{ props.row.to_account_id }}</q-td>
+            <q-td key="crdr" :props="props">
+              <q-badge :color="props.row.crdr === 'cr' ? 'green' : 'red'">
+                {{ props.row.crdr }}
+              </q-badge>
+            </q-td>
+            <q-td key="amount" :props="props">{{ props.row.amount }}</q-td>
+            <q-td key="description" :props="props">{{ props.row.description }}</q-td>
+          </q-tr>
+        </template>
+      </q-table>
     </div>
   </q-page>
 </template>
@@ -43,6 +58,7 @@
 <script>
 import { ref, onMounted, toRaw } from 'vue'
 import { api } from 'src/boot/axios';
+import { useAuthStore } from '../stores/auth';
 
 export default {
   setup() {
@@ -52,15 +68,14 @@ export default {
         required: true,
         label: 'Timestamp',
         align: 'left',
-        field: 'timestamp',
+        field: row => row.timestamp,
         format: (val) => new Date(val).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }),
         sortable: true,
-        sort: (a, b) => new Date(b).getTime() - new Date(a).getTime(), // Modified sort function
-        sortOrder: 'ad'
       },
       { name: 'from_account_id', align: 'left', label: 'From Account', field: 'from_account_id' },
       { name: 'to_account_id', align: 'left', label: 'To Account', field: 'to_account_id' },
-      { name: 'amount', align: 'right', label: 'Amount', field: 'amount', sortable: true },
+      { name: 'crdr', align: 'left', label: 'CR/DR', field: 'crdr', sortable: true },
+      { name: 'amount', align: 'right', label: 'Amount', field: 'amount', sortable: true, format: (val) => `$${val.toFixed(2)}` },
       { name: 'description', align: 'left', label: 'Description', field: 'description' }
     ]
     const rows = ref([])
@@ -74,6 +89,21 @@ export default {
 
         totalTransactions.value = transactionsResponse.data.data.length
         totalAmountTransferred.value = transactionsResponse.data.data.reduce((acc, transaction) => acc + transaction.amount, 0)
+
+        const accountsResponse = await api.get('/api/v1/accounts/' + useAuthStore().username);
+        const accountsList = toRaw(accountsResponse.data.data);
+
+        // if to_account_id in the transaction is one of account id from accounts response, it is a deposit
+        rows.value.forEach(transaction => {
+          if (accountsList.some(account => account.id === transaction.to_account_id)) {
+            rows.value[rows.value.indexOf(transaction)].crdr = 'cr'
+          } else {
+            rows.value[rows.value.indexOf(transaction)].crdr = 'dr'
+          }
+        }
+
+
+        );
 
       } catch (error) {
         console.error(error)

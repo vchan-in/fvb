@@ -16,7 +16,7 @@ from handlers.gql import graphql_app
 
 methods = ["GET", "POST", "DELETE", "OPTIONS", "PUT", "PATCH"]
 
-app = FastAPI(redirect_slashes=False, title="vBank API", description="A vulnerable bank API", version="24.02")
+app = FastAPI(redirect_slashes=False, title="vBank API", description="A vulnerable bank API", version="24.09")
 
 app.add_middleware(
     CORSMiddleware,

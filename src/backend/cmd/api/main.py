@@ -8,7 +8,7 @@ from datetime import timedelta
 from typing import Generator, Annotated
 
 from data.models import User as UserModel
-from data.serializers import User, UserCreate, Token, AccountCreate, UserLogin, TransactionCreate
+from data.serializers import User, UserCreate, Token, AccountCreate, UserLogin, TransactionCreate, Deposit
 from db.database import SessionLocal
 from handlers.main import ACCESS_TOKEN_EXPIRE_MINUTES
 from handlers.main import get_user_me_handler, register_user_handler, authenticate_user_handler, get_current_user_handler, create_access_token_handler, get_user_by_username_handler, create_account_handler, get_all_accounts_of_user_handler, create_transaction_handler, create_deposit_handler, decode_jwt, get_all_transactions_of_user_handler
@@ -202,13 +202,13 @@ async def create_transaction(request: TransactionCreate, db: Session = Depends(g
 
 # Create Deposit route
 @router.post("/deposit/create", dependencies=[Depends(JWTBearer())])
-async def deposit(request: TransactionCreate, db: Session = Depends(get_db), authorization: Annotated[list[str] | None, Header()] = None):
+async def deposit(request: Deposit, db: Session = Depends(get_db), authorization: Annotated[list[str] | None, Header()] = None):
     '''
     Create deposit
     
     Example usage:
     {
-        "deposit_type": "check",
+        "type": "check",
         "amount": 1000.0,
         "description": "remote deposit",
         "to_account_id": 1,

@@ -14,7 +14,7 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 
 from data.models import User as UserModel, Account as AccountModel, Transaction as TransactionModel
-from data.serializers import User, Account, AccountCreate, TransactionCreate, TransactionResponse, TokenData, UserInDB
+from data.serializers import User, Account, AccountCreate, TransactionCreate, TransactionResponse,Deposit, TokenData, UserInDB
 from db.database import SessionLocal, Session as DBSession
 from utils.main import convert_to_utc
 
@@ -204,13 +204,13 @@ async def create_transaction_handler(db: Session, request: TransactionCreate, us
         raise e
     
 # Create deposit handler
-async def create_deposit_handler(db: Session, request: TransactionCreate, user: User) -> TransactionResponse:
+async def create_deposit_handler(db: Session, request: Deposit, user: User) -> TransactionResponse:
     '''
     Create deposit
 
     Example usage:
 
-        create_deposit_handler(request=TransactionCreate(amount=1000.0, description="remote deposit", to_account_id=2))
+        create_deposit_handler(request=Deposit(amount=1000.0, description="remote deposit", to_account_id=2))
 
     Output:
 
@@ -218,15 +218,11 @@ async def create_deposit_handler(db: Session, request: TransactionCreate, user: 
             "amount": 1000.0,
             "description": "remote deposit",
             "timestamp": "2021-02-24T00:00:00Z",
+            "from_account_id": 2,
             "to_account_id": 2
         }
     '''
     try:
-        # Verify if the from account belongs to the current user
-        from_is_valid = db.query(AccountModel).filter(or_(AccountModel.user_id == user.id, AccountModel.id == request.from_account_id)).first() ## Security Vuln: Changed from == to or_ to allow any user to transfer from any account
-        if not from_is_valid:
-            raise Exception("Invalid from account")
-        
         to_account = db.query(AccountModel).filter(AccountModel.id == request.to_account_id).first()
         
         to_account.balance += request.amount

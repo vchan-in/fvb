@@ -74,7 +74,6 @@
             v-ripple
             to="/deposit"
             exact
-            disable
             v-if="currentUser"
           >
             <q-item-section avatar>

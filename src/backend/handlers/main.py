@@ -203,6 +203,55 @@ async def create_transaction_handler(db: Session, request: TransactionCreate, us
         db.rollback()
         raise e
     
+# Create deposit handler
+async def create_deposit_handler(db: Session, request: TransactionCreate, user: User) -> TransactionResponse:
+    '''
+    Create deposit
+
+    Example usage:
+
+        create_deposit_handler(request=TransactionCreate(amount=1000.0, description="remote deposit", to_account_id=2))
+
+    Output:
+
+        {
+            "amount": 1000.0,
+            "description": "remote deposit",
+            "timestamp": "2021-02-24T00:00:00Z",
+            "to_account_id": 2
+        }
+    '''
+    try:
+        # Verify if the from account belongs to the current user
+        from_is_valid = db.query(AccountModel).filter(or_(AccountModel.user_id == user.id, AccountModel.id == request.from_account_id)).first() ## Security Vuln: Changed from == to or_ to allow any user to transfer from any account
+        if not from_is_valid:
+            raise Exception("Invalid from account")
+        
+        to_account = db.query(AccountModel).filter(AccountModel.id == request.to_account_id).first()
+        
+        to_account.balance += request.amount
+        db.commit()
+        
+        transaction = TransactionModel(
+            amount=request.amount,
+            description=request.description,
+            from_account_id=to_account.id,  # Deposit is from the account itself
+            to_account_id=to_account.id
+        )
+        db.add(transaction)
+        db.commit()
+        db.refresh(transaction)
+        return TransactionResponse(
+            from_account=to_account,
+            to_account=to_account,
+            amount=transaction.amount,
+            description=transaction.description,
+            timestamp=transaction.timestamp.isoformat() + "Z"
+        )
+    except Exception as e:
+        db.rollback()
+        raise e
+    
 # Delete user handler for admin
 async def admin_delete_user_handler(db: Session, user_id: int):
     '''

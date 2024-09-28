@@ -66,8 +66,8 @@ export default {
     // Login user, if successful redirect to home page
     const login = async () => {
       try {
-        console.log('VBANK_BACKEND_BASEURL:', process.env.VBANK_BACKEND_BASEURL);
-        console.log('VBANK_BACKEND_PORT:', process.env.VBANK_BACKEND_PORT);
+        console.log('FVB_BACKEND_BASEURL:', process.env.FVB_BACKEND_BASEURL);
+        console.log('FVB_BACKEND_PORT:', process.env.FVB_BACKEND_PORT);
         if (await authStore.login(username.value, password.value)) {
           Notify.create({
             message: 'Login successful.',

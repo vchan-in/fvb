@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace "in.vchan.vbank"
+    namespace "in.vchan.fvb"
     compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "in.vchan.vbank"
+        applicationId "in.vchan.fvb"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

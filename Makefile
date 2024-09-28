@@ -20,17 +20,17 @@ install: # ToDo: To rework on this
 backend: # ToDo: To rework on this
 	@echo "Starting backend development server..."
 	-@cp .env src/backend/.env
-	-@cd src/backend && . .venv/bin/activate && uvicorn main:app --host 0.0.0.0 --port ${VBANK_BACKEND_PORT} --reload
+	-@cd src/backend && . .venv/bin/activate && uvicorn main:app --host 0.0.0.0 --port ${FVB_BACKEND_PORT} --reload
 	
 client: # ToDo: To rework on this
 	@echo "Starting client development server..."
 	-@cp .env src/client/.env
-	cd src/client && npm i -g @quasar/cli@latest && npm i && quasar dev -m spa -p 8080 VBANK_BACKEND_BASEURL=${VBANK_BACKEND_BASEURL} VBANK_BACKEND_PORT=${VBANK_BACKEND_PORT}
+	cd src/client && npm i -g @quasar/cli@latest && npm i && quasar dev -m spa -p 8080 FVB_BACKEND_BASEURL=${FVB_BACKEND_BASEURL} FVB_BACKEND_PORT=${FVB_BACKEND_PORT}
 
 client-android: # ToDo: To rework on this
 	@echo "Starting client development server with android studios..."
 	-@cp .env src/client/.env
-	cd src/client && npm i -g @quasar/cli@latest && npm i && quasar dev -m capacitor -T android VBANK_BACKEND_BASEURL=${VBANK_BACKEND_BASEURL} VBANK_BACKEND_PORT=${VBANK_BACKEND_PORT}
+	cd src/client && npm i -g @quasar/cli@latest && npm i && quasar dev -m capacitor -T android FVB_BACKEND_BASEURL=${FVB_BACKEND_BASEURL} FVB_BACKEND_PORT=${FVB_BACKEND_PORT}
 
 docker:
 	@echo "Starting docker containers with build..."

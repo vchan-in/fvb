@@ -117,11 +117,11 @@ async def create_account_handler(db: Session, user: User) -> Account:
         ''' 
         Generate account number
         Account number logic:
-        1. Prefix: VBANK
+        1. Prefix: FVB
         2. Random 4 digit number
         3. Suffix: Timestamp format: YYYYDDHHMMSS
         '''
-        account_id = f"VBANK{str(random.randint(1000, 9999))}{datetime.now().strftime('%Y%d%H%M%S')}"
+        account_id = f"FVB{str(random.randint(1000, 9999))}{datetime.now().strftime('%Y%d%H%M%S')}"
 
         if not user:
             raise Exception("User not found")

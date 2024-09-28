@@ -23,7 +23,7 @@ def seed_default_users():
             if system_user:
                 print("INFO:     System user already exists")
                 return
-            system_user = models.User(id=1, admin=0, username="system", password="AnikanSkywalkerIsTheChosenOne", hashed_password="AnikanSkywalkerIsTheChosenOne", email="system@vbank.vbank", phone="1234567890", address="local")
+            system_user = models.User(id=1, admin=0, username="system", password="AnikanSkywalkerIsTheChosenOne", hashed_password="AnikanSkywalkerIsTheChosenOne", email="system@fvb.fvb", phone="1234567890", address="local")
             session.add(system_user)
             session.commit()
     except Exception as e:
@@ -80,7 +80,7 @@ def seed_fake_data_sql():
     for user in users:
         # Get user id from the user string
         for _ in range(fake.random_int(1, 5)):
-            account_id = f"VBANK{str(random.randint(1000, 9999))}{datetime.now().strftime('%Y%d%H%M%S')}"
+            account_id = f"FVB{str(random.randint(1000, 9999))}{datetime.now().strftime('%Y%d%H%M%S')}"
             balance = fake.random_int(100, 1000)
             # Check if account already exists
             if account_id not in [acc['id'] for acc in accounts]:
@@ -136,10 +136,10 @@ def insert_fake_data_txt():
 
     print("INFO:     Fake data inserted into database")
 
-# Import the vbank.sql file into the database
-def seed_vbank_sql():
+# Import the fvb.sql file into the database
+def seed_fvb_sql():
     try:
-        with open("vbank.sql", "r") as f:
+        with open("fvb.sql", "r") as f:
             statements = f.read().split(';')
             with Session(engine) as session:
                 for statement in statements:
@@ -152,14 +152,14 @@ def seed_vbank_sql():
     except Exception as e:
         print(f"ERROR:    {e}")
 
-    print("INFO:     vbank.sql file imported into database")
+    print("INFO:     fvb.sql file imported into database")
     
 
 def seed():
     generate_tables()
     # seed_default_users()
     # seed_fake_data_txt()
-    # seed_vbank_sql()
+    # seed_fvb_sql()
     
 
 if __name__ == "__main__":

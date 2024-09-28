@@ -1,11 +1,11 @@
-# vBank
+# FVB
 
-vBank is a deliberately insecure web application based on a banking system, designed to aid security professionals, developers, and students to learn and practice security vulnerabilities in a safe and legal environment. vBank provides a platform for penetration testing and security training. The application showcases various security flaws, which users are encouraged to identify and exploit. It's an excellent tool for learning about common security issues in web applications.
+FVB is a deliberately insecure web application based on a banking system, designed to aid security professionals, developers, and students to learn and practice security vulnerabilities in a safe and legal environment. FVB provides a platform for penetration testing and security training. The application showcases various security flaws, which users are encouraged to identify and exploit. It's an excellent tool for learning about common security issues in web applications.
 
 ## Table of Contents
 
 - [Setup](#setup)
-- [User Credentials](https://github.com/vchan-in/vbank/wiki/Credentials)
+- [User Credentials](https://github.com/vchan-in/fvb/wiki/Credentials)
 - [Description](#description)
 - [Features](#features)
 - [Screenshots](#screenshots)
@@ -21,11 +21,11 @@ Follow these steps to set up the project:
 
 1. Install [Node v18.16.1](https://nodejs.org/en/blog/release/v18.16.1)
 2. Install [Python v3.11.4](https://www.python.org/downloads/release/python-3114/)
-3. Run `git clone https://github.com/vchan-in/vbank.git --depth 1` (or
-   clone [your own fork](https://github.com/vchan-in/vbank/fork)
+3. Run `git clone https://github.com/vchan-in/fvb.git --depth 1` (or
+   clone [your own fork](https://github.com/vchan-in/fvb/fork)
    of the repository)
 
-4. Go into the cloned folder with `cd vbank`
+4. Go into the cloned folder with `cd fvb`
 5. Create `.env` file from `env.template` file.
 6. Build the source by running `make install`
 7. Start the backend development server `make backend`
@@ -94,12 +94,12 @@ Contributions are what make the open source community such an amazing place to l
 
 ## Links
 
-- Project homepage: https://github.com/vchan-in/vbank
-- Repository: https://github.com/vchan-in/vbank.git
-- Issue tracker: https://github.com/vchan-in/vbank/issues
+- Project homepage: https://github.com/vchan-in/fvb
+- Repository: https://github.com/vchan-in/fvb.git
+- Issue tracker: https://github.com/vchan-in/fvb/issues
 
 ## Licensing
 
 The code in this project is licensed under MIT license.
 
-This program is free software: You can redistribute it and/or modify it under the terms of the MIT License. vBank and any contributions are Copyright © by Vaishno Chaitanya & the vBank contributors 2023 - 2024.
+This program is free software: You can redistribute it and/or modify it under the terms of the MIT License. FVB and any contributions are Copyright © by Vaishno Chaitanya & the FVB contributors 2023 - 2024.

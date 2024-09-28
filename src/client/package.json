@@ -1,8 +1,8 @@
 {
-  "name": "vbank",
+  "name": "fvb",
   "version": "24.02",
   "description": "A Vulnerable Bank App",
-  "productName": "vbank",
+  "productName": "fvb",
   "author": "Vaishno Chaitanya <17123227+vchan-in@users.noreply.github.com>",
   "private": true,
   "scripts": {

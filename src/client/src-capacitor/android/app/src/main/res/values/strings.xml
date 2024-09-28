@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">vbank</string>
-    <string name="title_activity_main">vbank</string>
-    <string name="package_name">in.vchan.vbank</string>
-    <string name="custom_url_scheme">in.vchan.vbank</string>
+    <string name="app_name">fvb</string>
+    <string name="title_activity_main">fvb</string>
+    <string name="package_name">in.vchan.fvb</string>
+    <string name="custom_url_scheme">in.vchan.fvb</string>
 </resources>

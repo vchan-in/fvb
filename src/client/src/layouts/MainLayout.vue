@@ -11,7 +11,7 @@
           @click="leftDrawerOpen = !leftDrawerOpen"
         />
         <q-toolbar-title>
-          {{ currentUser ? 'Hi, ' + currentUser : 'FVB' }}
+          {{ currentUser ? 'Hi, ' + currentUser : 'First Vulenrable Bank' }}
         </q-toolbar-title>
         <div class="text-subtitle2">{{ todaysDate }}</div>
       </q-toolbar>
@@ -191,11 +191,7 @@
 
           <q-item-section>
             <q-item-label>
-              FVB &copy; 2024
-            </q-item-label>
-            <q-item-label caption v-if="checkPing">
-              <q-icon name="check" color="green" />
-              <span>Server Online</span>
+              &copy; First Vulnerable Bank
             </q-item-label>
           </q-item-section>
         </q-item>
@@ -204,7 +200,7 @@
       <q-img class="absolute-top" src="mountains.jpg" style="height: 10em">
         <div class="absolute-bottom bg-primary">
           <q-icon name="account_balance" size="4em" />
-          <div class="text-h5 text-weight-bold">FVB</div>
+          <div class="text-h5 text-weight-bold">FIRST</div>
           <div class="text-italic">Bank with Confidence</div>
         </div>
       </q-img>

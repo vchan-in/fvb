@@ -9,22 +9,18 @@ from cmd.seed.main import seed
 from handlers.gql import graphql_app
 
 
-# # Seed the database # ToDo: Remove this
-# seed()
-
-
-
 methods = ["GET", "POST", "DELETE", "OPTIONS", "PUT", "PATCH"]
 
-app = FastAPI(redirect_slashes=False, title="FVB API", description="A vulnerable bank API", version="24.09")
+app = FastAPI(redirect_slashes=False, title="FVB API", description="A vulnerable bank", version="24.09")
+
+origins = ['http://localhost:8080', 'http://127.0.0.1:8080']
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=methods,
     allow_headers=["*"],
-    expose_headers=["*"],
 )
 
 @app.get("/")

@@ -10,7 +10,6 @@ from sqlalchemy import text
 
 fake = Faker()
 
-
 def generate_tables():
     models.Base.metadata.create_all(bind=engine)
     print("INFO:     Tables created")
@@ -53,7 +52,7 @@ def seed_fake_data_sql():
     accounts = []
     transactions = []
 
-    # Generate 143 fake users
+    # Generate 1143 fake users
     # Start with user ID 3
     user_id = 2
     for _ in range(1143):
@@ -80,7 +79,7 @@ def seed_fake_data_sql():
     for user in users:
         # Get user id from the user string
         for _ in range(fake.random_int(1, 5)):
-            account_id = f"FVB{str(random.randint(1000, 9999))}{datetime.now().strftime('%Y%d%H%M%S')}"
+            account_id = f"FVB{str(random.randint(1000, 9999))}{datetime.now().strftime('%Y%H')}"
             balance = fake.random_int(100, 1000)
             # Check if account already exists
             if account_id not in [acc['id'] for acc in accounts]:
@@ -116,7 +115,7 @@ def seed_fake_data_sql():
         for transaction in transactions:
             f.write(f"INSERT INTO transactions (amount, description, from_account_id, to_account_id, timestamp) VALUES ({transaction['amount']}, '{transaction['description']}', '{transaction['from_account_id']}', '{transaction['to_account_id']}', '{transaction['timestamp']}');\n")
     
-    print("INFO:     Fake data written to seed.sql file")
+    print("INFO:     Fake data written to seed.txt file")
 
 
 def insert_fake_data_txt():
@@ -157,8 +156,9 @@ def seed_fvb_sql():
 
 def seed():
     generate_tables()
-    # seed_default_users()
-    # seed_fake_data_txt()
+    seed_default_users()
+    # seed_fake_data_sql()
+    insert_fake_data_txt()
     # seed_fvb_sql()
     
 

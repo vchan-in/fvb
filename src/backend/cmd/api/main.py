@@ -85,8 +85,8 @@ async def login_for_access_token(request: UserLogin, db: Session = Depends(get_d
     Example usage:
 
         {
-            "username": "johnsmith",
-            "password": "mypassword"
+            "username": "johnsmith1",
+            "password": "somepassword"
         }
 
     Output:

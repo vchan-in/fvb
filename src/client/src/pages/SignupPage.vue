@@ -169,7 +169,6 @@ export default {
     const register = async () => {
       try {
         const registerResponse = await api.post('/api/v1/user/create', {
-          admin: 0,
           username: username.value,
           email: email.value,
           password: password.value,
@@ -198,7 +197,7 @@ export default {
         }
       } catch (error) {
         Notify.create({
-          message: 'Error creating account. Please try again later.',
+          message: 'Error creating account.' + error,
           color: 'negative',
           icon: 'warning',
         });

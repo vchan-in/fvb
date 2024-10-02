@@ -6,8 +6,6 @@ from starlette.middleware.cors import CORSMiddleware
 from cmd.api.main import router as customer_router
 from cmd.api.admin import router as admin_router
 
-from cmd.seed.main import seed
-
 from handlers.gql import graphql_app
 
 
@@ -37,6 +35,7 @@ app.add_middleware(
     allow_methods=methods,
     allow_headers=["*"],
 )
+
 
 @app.get("/")
 def read_root():

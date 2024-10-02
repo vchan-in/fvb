@@ -11,7 +11,7 @@
           @click="leftDrawerOpen = !leftDrawerOpen"
         />
         <q-toolbar-title>
-          {{ currentUser ? 'Hi, ' + currentUser : 'First Vulenrable Bank' }}
+          {{ currentUser ? 'Hi, ' + currentUser : 'First Vulnerable Bank' }}
         </q-toolbar-title>
         <div class="text-subtitle2">{{ todaysDate }}</div>
       </q-toolbar>

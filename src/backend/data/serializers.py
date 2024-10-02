@@ -64,7 +64,7 @@ class Transaction(BaseModel):
         from_attributes = True
 
 class UserCreate(BaseModel):
-    admin: int
+    admin: Optional[int] = None
     username: str
     email: str
     password: str

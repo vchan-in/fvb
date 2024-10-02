@@ -1,3 +1,5 @@
+import os
+
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
@@ -9,9 +11,22 @@ from cmd.seed.main import seed
 from handlers.gql import graphql_app
 
 
+FVB_BACKEND_BASEURL = os.getenv("FVB_BACKEND_BASEURL", "http://127.0.0.1")
+FVB_BACKEND_PORT = os.getenv("FVB_BACKEND_PORT", "8000")
+FVB_BACKEND_BASEURLPORT = f"{FVB_BACKEND_BASEURL}:{FVB_BACKEND_PORT}"
+
 methods = ["GET", "POST", "DELETE", "OPTIONS", "PUT", "PATCH"]
 
-app = FastAPI(redirect_slashes=False, title="FVB API", description="A vulnerable bank", version="24.09")
+app = FastAPI(
+        redirect_slashes=False,
+        title="FVB API",
+        description="A vulnerable bank",
+        version="24.09",
+        servers=[
+            {"url": "http://localhost:8000", "description": "Development environment"},
+            {"url": FVB_BACKEND_BASEURLPORT , "description": "Production environment"},
+        ],
+    )
 
 origins = ['http://localhost:8080', 'http://127.0.0.1:8080']
 

@@ -2,15 +2,17 @@ services:
   backend:
     build: ./src/backend
     restart: always
-    container_name: vbank_backend
-    command: 'uvicorn main:app --host 0.0.0.0 --port ${VBANK_BACKEND_PORT:-8000} --workers 4'
+    container_name: fvb_backend
+    command: 'uvicorn main:app --host 0.0.0.0 --port ${FVB_BACKEND_PORT:-8000} --workers 4'
     environment:
-      VBANK_DATABASE_HOST: ${VBANK_BACKEND_HOST:-db}
-      VBANK_DATABASE_NAME: ${VBANK_DATABASE_NAME:-vbank}
-      VBANK_DATABASE_USER: ${VBANK_DATABASE_USER:-vbank}
-      VBANK_DATABASE_PASSWORD: ${VBANK_DATABASE_PASSWORD:-vbank}
+      FVB_DATABASE_HOST: ${FVB_DATABASE_HOST:-db}
+      FVB_DATABASE_NAME: ${FVB_DATABASE_NAME:-fvb}
+      FVB_DATABASE_USER: ${FVB_DATABASE_USER:-fvb}
+      FVB_DATABASE_PASSWORD: ${FVB_DATABASE_PASSWORD:-fvb}
+      FVB_BACKEND_BASEURL: ${FVB_BACKEND_BASEURL:-http://localhost}
+      FVB_BACKEND_PORT: ${FVB_BACKEND_PORT:-8000}
     ports:
-      - "8000:8000"   # Change this port if you want backend to run on a different port.
+      - "8000:8000"
     depends_on:
       - db
 
@@ -20,36 +22,36 @@ services:
       dockerfile: Dockerfile
       target: prod-pwa-stage
       args:
-        VBANK_BACKEND_BASEURL: ${VBANK_BACKEND_BASEURL:-http://192.168.0.183}
-        VBANK_BACKEND_PORT: ${VBANK_BACKEND_PORT:-8000}
+        FVB_BACKEND_BASEURL: ${FVB_BACKEND_BASEURL:-http://localhost}
+        FVB_BACKEND_PORT: ${FVB_BACKEND_PORT:-8000}
     restart: always
-    container_name: vbank_client
+    container_name: fvb_client
     ports:
-      - "8080:80"
+      - "8080:8080"
     depends_on:
       - backend
 
   db:
     image: mysql:8.0
-    container_name: vbank_db
+    container_name: fvb_db
     restart: always
     environment:
-      MYSQL_DATABASE: ${VBANK_DATABASE_NAME:-vbank}
-      MYSQL_ROOT_USER: ${VBANK_DATABASE_USER:-root}
-      MYSQL_ROOT_PASSWORD: ${VBANK_DATABASE_PASSWORD:-vbank}
+      MYSQL_DATABASE: ${FVB_DATABASE_NAME:-fvb}
+      MYSQL_ROOT_USER: ${FVB_DATABASE_USER:-root}
+      MYSQL_ROOT_PASSWORD: ${FVB_DATABASE_PASSWORD:-fvb}
     ports:
       - "3306:3306"
     volumes:
-      - ./data/vbank.sql:/docker-entrypoint-initdb.d/vbank.sql
+      - ./data/fvb.sql:/docker-entrypoint-initdb.d/fvb.sql:ro
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
-    container_name: vbank_phpmyadmin
+    container_name: fvb_phpmyadmin
     restart: always
     environment:
       PMA_HOST: db
       PMA_PORT: 3306
-      MYSQL_ROOT_PASSWORD: ${VBANK_DATABASE_PASSWORD:-vbank}
+      MYSQL_ROOT_PASSWORD: ${FVB_DATABASE_PASSWORD:-fvb}
     ports:
       - "7070:80"
     depends_on:

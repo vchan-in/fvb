@@ -66,8 +66,8 @@ module.exports = configure(function (/* ctx */) {
       // publicPath: '/',
       // analyze: true,
       env: {
-        VBANK_BACKEND_BASEURL: process.env.VBANK_BACKEND_BASEURL,
-        VBANK_BACKEND_PORT: process.env.VBANK_BACKEND_PORT,
+        FVB_BACKEND_BASEURL: process.env.FVB_BACKEND_BASEURL,
+        FVB_BACKEND_PORT: process.env.FVB_BACKEND_PORT,
         ...env,
       },
       // rawDefine: {}
@@ -220,7 +220,7 @@ module.exports = configure(function (/* ctx */) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'vbank',
+        appId: 'fvb',
       },
     },
 

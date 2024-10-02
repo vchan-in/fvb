@@ -67,7 +67,8 @@ async def get_user(username: str, db: Session = Depends(get_db)):
     return JSONResponse(status_code=404, content={"status": "error", "message": "User not found"})
 
 # Get all users route
-@router.get("/users", dependencies=[Depends(JWTBearer())])
+#SecurityVuln: Authenticated route bypass. Oh no the developer forgot to add the JWTBearer dependency here. This means that anyone can access this route without being authenticated.
+@router.get("/users")
 async def get_all_users(db: Session = Depends(get_db)):
     users = await get_all_users_handler(db)
     return JSONResponse(status_code=200, content={"status": "success", "message": "Users retrieved successfully", "data": jsonable_encoder(users)})

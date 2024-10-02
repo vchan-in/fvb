@@ -202,18 +202,18 @@ export default {
         {
           "timestamp": "2024-02-17T17:07:38",
           "id": 6,
-          "to_account_id": "VBANK127120240217081416",
+          "to_account_id": "FVB127120240217081416",
           "amount": 0,
           "description": "test",
-          "from_account_id": "VBANK101720240217081023"
+          "from_account_id": "FVB101720240217081023"
         },
         {
           "timestamp": "2024-02-17T17:11:08",
           "id": 7,
-          "to_account_id": "VBANK127120240217081416",
+          "to_account_id": "FVB127120240217081416",
           "amount": 0,
           "description": "test",
-          "from_account_id": "VBANK101720240217081023"
+          "from_account_id": "FVB101720240217081023"
         },
       ]
     ```

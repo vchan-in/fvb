@@ -8,10 +8,10 @@ from datetime import timedelta
 from typing import Generator, Annotated
 
 from data.models import User as UserModel
-from data.serializers import User, UserCreate, Token, AccountCreate, UserLogin, TransactionCreate
+from data.serializers import User, UserCreate, Token, AccountCreate, UserLogin, TransactionCreate, Deposit
 from db.database import SessionLocal
 from handlers.main import ACCESS_TOKEN_EXPIRE_MINUTES
-from handlers.main import get_user_me_handler, register_user_handler, authenticate_user_handler, get_current_user_handler, create_access_token_handler, get_user_by_username_handler, create_account_handler, get_all_accounts_of_user_handler, create_transaction_handler, decode_jwt, get_all_transactions_of_user_handler
+from handlers.main import get_user_me_handler, register_user_handler, authenticate_user_handler, get_current_user_handler, create_access_token_handler, get_user_by_username_handler, create_account_handler, get_all_accounts_of_user_handler, create_transaction_handler, create_deposit_handler, decode_jwt, get_all_transactions_of_user_handler
 from handlers.auth_bearer import JWTBearer
 
 
@@ -44,7 +44,6 @@ async def register(request: UserCreate, db: Session = Depends(get_db)):
     Example usage:
 
         {
-            "admin": 1,
             "username": "your_username",
             "email": "your_email",
             "password": "your_password",
@@ -60,7 +59,7 @@ async def register(request: UserCreate, db: Session = Depends(get_db)):
             "message": "User created
             "data": {
                 "id": 1,
-                "admin": 1,
+                "admin": 0,
                 "username": "your_username",
                 "email": "your_email",
                 "password": "your_password",
@@ -86,8 +85,8 @@ async def login_for_access_token(request: UserLogin, db: Session = Depends(get_d
     Example usage:
 
         {
-            "username": "your_username",
-            "password": "your_password"
+            "username": "johnsmith1",
+            "password": "somepassword"
         }
 
     Output:
@@ -200,6 +199,43 @@ async def create_transaction(request: TransactionCreate, db: Session = Depends(g
     except Exception as e:
         return JSONResponse(status_code=400, content={"status": "error", "message": str(e)})
 
+# Create Deposit route
+@router.post("/deposit/create", dependencies=[Depends(JWTBearer())])
+async def deposit(request: Deposit, db: Session = Depends(get_db), authorization: Annotated[list[str] | None, Header()] = None):
+    '''
+    Create deposit
+    
+    Example usage:
+    {
+        "type": "check",
+        "amount": 1000.0,
+        "description": "remote deposit",
+        "to_account_id": 1,
+        "check_front": "base64_encoded_image",
+        "check_back": "base64_encoded_image"
+    }
+    
+    Output:
+    {
+        "status": "success",
+        "message": "Deposit created successfully",
+        "data": {
+            "id": 1,
+            "amount": 1000.0,
+            "description": "Remote deposit",
+            "timestamp": "2021-05-30T00:00:00",
+            "to_account_id": 1
+        }
+    }
+    '''
+    try:
+        # Get current user id from the Authorization header bearer token
+        token = authorization[0].split(" ")[1]
+        current_user = await get_user_me_handler(token)
+        transaction = await create_deposit_handler(db, request, current_user)
+        return JSONResponse(status_code=201, content={"status": "success", "message": "Deposit created successfully", "data": jsonable_encoder(transaction)})
+    except Exception as e:
+        return JSONResponse(status_code=400, content={"status": "error", "message": str(e)})
 #
 #
 # Read Handlers

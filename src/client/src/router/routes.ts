@@ -24,7 +24,19 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
-  // Transaction page
+  // Deposit page
+  {
+    path: '/deposit',
+    name: 'DepositPage',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/DepositPage.vue') }],
+    meta: {
+      requiresAuth: true,
+      title: 'Deposit',
+    },
+  },
+
+  // Transactions page
   {
     path: '/transactions',
     name: 'TransactionsPage',

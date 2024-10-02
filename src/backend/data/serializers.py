@@ -64,7 +64,7 @@ class Transaction(BaseModel):
         from_attributes = True
 
 class UserCreate(BaseModel):
-    admin: int
+    admin: Optional[int] = None
     username: str
     email: str
     password: str
@@ -98,6 +98,11 @@ class TransactionResponseGQL():
     amount: float
     description: Optional[str]
     timestamp: str
+    
+class Deposit(BaseModel):
+    amount: float
+    description: Optional[str]
+    to_account_id: str
 
 class AccountResponse(BaseModel):
     account: Account

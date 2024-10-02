@@ -14,7 +14,7 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 
 from data.models import User as UserModel, Account as AccountModel, Transaction as TransactionModel
-from data.serializers import User, Account, AccountCreate, TransactionCreate, TransactionResponse, TokenData, UserInDB
+from data.serializers import User, UserCreate, Account, AccountCreate, TransactionCreate, TransactionResponse,Deposit, TokenData, UserInDB
 from db.database import SessionLocal, Session as DBSession
 from utils.main import convert_to_utc
 
@@ -56,19 +56,27 @@ def create_access_token_handler(data: dict, expires_delta: timedelta | None = No
     return encoded_jwt
 
 # Register User Handler
-async def register_user_handler(db: Session, request: UserModel) -> User:
+async def register_user_handler(db: Session, request: UserCreate) -> User:
     '''
     Register user
     
     Example usage:
 
-        register_user_handler(request=UserModel(admin=1, username="your_username", email="your_email", password="your_password", dob="your_dob", phone="your_phone", address="your_address"))
+        register_user_handler(request=UserModel(username="your_username", email="your_email", password="your_password", dob="your_dob", phone="your_phone", address="your_address"))
 
     Output:
 
         UserModel(admin=1, username="your_username", email="your_email", password="your_password", dob="your_dob", phone="your_phone", address="your_address")
     '''
     try:
+        # Check if the user already exists
+        user = db.query(UserModel).filter(UserModel.username == request.username).first()
+        if user:
+            raise ValueError("User with same username or email already exists")
+        
+        if request.admin is None:
+            request.admin = 0
+
         user = UserModel (
                 admin=request.admin,
                 username=request.username,
@@ -117,14 +125,14 @@ async def create_account_handler(db: Session, user: User) -> Account:
         ''' 
         Generate account number
         Account number logic:
-        1. Prefix: VBANK
+        1. Prefix: FVB
         2. Random 4 digit number
         3. Suffix: Timestamp format: YYYYDDHHMMSS
         '''
-        account_id = f"VBANK{str(random.randint(1000, 9999))}{datetime.now().strftime('%Y%d%H%M%S')}"
+        account_id = f"FVB{str(random.randint(1000, 9999))}{datetime.now().strftime('%Y%H')}"
 
         if not user:
-            raise Exception("User not found")
+            raise ValueError("User not found")
         
         # If the account is the 1st account of the user, add 1000 to the account balance as a welcome bonus
         accounts = db.query(AccountModel).filter(AccountModel.user_id == user.id).all()
@@ -194,6 +202,51 @@ async def create_transaction_handler(db: Session, request: TransactionCreate, us
         db.refresh(transaction)
         return TransactionResponse(
             from_account=from_account,
+            to_account=to_account,
+            amount=transaction.amount,
+            description=transaction.description,
+            timestamp=transaction.timestamp.isoformat() + "Z"
+        )
+    except Exception as e:
+        db.rollback()
+        raise e
+    
+# Create deposit handler
+async def create_deposit_handler(db: Session, request: Deposit, user: User) -> TransactionResponse:
+    '''
+    Create deposit
+
+    Example usage:
+
+        create_deposit_handler(request=Deposit(amount=1000.0, description="remote deposit", to_account_id=2))
+
+    Output:
+
+        {
+            "amount": 1000.0,
+            "description": "remote deposit",
+            "timestamp": "2021-02-24T00:00:00Z",
+            "from_account_id": 2,
+            "to_account_id": 2
+        }
+    '''
+    try:
+        to_account = db.query(AccountModel).filter(AccountModel.id == request.to_account_id).first()
+        
+        to_account.balance += request.amount
+        db.commit()
+        
+        transaction = TransactionModel(
+            amount=request.amount,
+            description=request.description,
+            from_account_id=to_account.id,  # Deposit is from the account itself
+            to_account_id=to_account.id
+        )
+        db.add(transaction)
+        db.commit()
+        db.refresh(transaction)
+        return TransactionResponse(
+            from_account=to_account,
             to_account=to_account,
             amount=transaction.amount,
             description=transaction.description,

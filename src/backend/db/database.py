@@ -10,20 +10,20 @@ if os.path.exists(os.path.join(BASEDIR, ".env")):
     print(f"Loading environment variables from {os.path.join(BASEDIR, '.env')}")
     load_dotenv(os.path.join(BASEDIR, ".env"))
 
-VBANK_DATABASE_HOST = os.getenv("VBANK_DATABASE_HOST", "db")
-VBANK_DATABASE_NAME = os.getenv("VBANK_DATABASE_NAME", "vbank")
-VBANK_DATABASE_USER = os.getenv("VBANK_DATABASE_USER", "root")
-VBANK_DATABASE_PASSWORD = os.getenv("VBANK_DATABASE_PASSWORD", "vbank")
+FVB_DATABASE_HOST = os.getenv("FVB_DATABASE_HOST", "db")
+FVB_DATABASE_NAME = os.getenv("FVB_DATABASE_NAME", "fvb")
+FVB_DATABASE_USER = os.getenv("FVB_DATABASE_USER", "root")
+FVB_DATABASE_PASSWORD = os.getenv("FVB_DATABASE_PASSWORD", "fvb")
 
 # Wait and retry to connect to the database
 while True:
     try:
-        engine = create_engine(f"mysql+mysqlconnector://{VBANK_DATABASE_USER}:{VBANK_DATABASE_PASSWORD}@{VBANK_DATABASE_HOST}:3306/{VBANK_DATABASE_NAME}")
+        engine = create_engine(f"mysql+mysqlconnector://{FVB_DATABASE_USER}:{FVB_DATABASE_PASSWORD}@{FVB_DATABASE_HOST}:3306/{FVB_DATABASE_NAME}")
         engine.connect()
-        print(f"Connected to database {VBANK_DATABASE_NAME} at {VBANK_DATABASE_HOST} as {VBANK_DATABASE_USER} with password {VBANK_DATABASE_PASSWORD}")
+        print(f"Connected to database {FVB_DATABASE_NAME} at {FVB_DATABASE_HOST} as {FVB_DATABASE_USER} with password {FVB_DATABASE_PASSWORD}")
         break
     except Exception as e:
-        print(f"Connecting to database {VBANK_DATABASE_NAME} at {VBANK_DATABASE_HOST} as {VBANK_DATABASE_USER} with password {VBANK_DATABASE_PASSWORD}")
+        print(f"Connecting to database {FVB_DATABASE_NAME} at {FVB_DATABASE_HOST} as {FVB_DATABASE_USER} with password {FVB_DATABASE_PASSWORD}")
         print("Database not ready yet, retrying in 5 seconds")
         time.sleep(5)
 

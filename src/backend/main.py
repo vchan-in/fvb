@@ -1,31 +1,41 @@
+import os
+
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
 from cmd.api.main import router as customer_router
 from cmd.api.admin import router as admin_router
 
-from cmd.seed.main import seed
-
 from handlers.gql import graphql_app
 
 
-# # Seed the database # ToDo: Remove this
-# seed()
-
-
+FVB_BACKEND_BASEURL = os.getenv("FVB_BACKEND_BASEURL", "http://127.0.0.1")
+FVB_BACKEND_PORT = os.getenv("FVB_BACKEND_PORT", "8000")
+FVB_BACKEND_BASEURLPORT = f"{FVB_BACKEND_BASEURL}:{FVB_BACKEND_PORT}"
 
 methods = ["GET", "POST", "DELETE", "OPTIONS", "PUT", "PATCH"]
 
-app = FastAPI(redirect_slashes=False, title="vBank API", description="A vulnerable bank API", version="24.02")
+app = FastAPI(
+        redirect_slashes=False,
+        title="FVB API",
+        description="A vulnerable bank",
+        version="24.09",
+        servers=[
+            {"url": "http://localhost:8000", "description": "Development environment"},
+            {"url": FVB_BACKEND_BASEURLPORT , "description": "Production environment"},
+        ],
+    )
+
+origins = ['http://localhost:8080', 'http://127.0.0.1:8080']
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=methods,
     allow_headers=["*"],
-    expose_headers=["*"],
 )
+
 
 @app.get("/")
 def read_root():

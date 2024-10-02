@@ -1,4 +1,4 @@
-# vbank (vbank)
+# fvb (fvb)
 
 A Vulnerable Bank App
 

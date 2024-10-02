@@ -1,4 +1,4 @@
-package in.vchan.vbank;
+package in.vchan.fvb;
 
 import com.getcapacitor.BridgeActivity;
 

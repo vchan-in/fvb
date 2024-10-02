@@ -42,7 +42,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./data/fvb.sql:/docker-entrypoint-initdb.d/fvb.sql
+      - ./data/fvb.sql:/docker-entrypoint-initdb.d/fvb.sql:ro
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest

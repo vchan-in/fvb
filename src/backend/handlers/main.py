@@ -62,7 +62,7 @@ async def register_user_handler(db: Session, request: UserCreate) -> User:
     
     Example usage:
 
-        register_user_handler(request=UserModel(admin=1, username="your_username", email="your_email", password="your_password", dob="your_dob", phone="your_phone", address="your_address"))
+        register_user_handler(request=UserModel(username="your_username", email="your_email", password="your_password", dob="your_dob", phone="your_phone", address="your_address"))
 
     Output:
 

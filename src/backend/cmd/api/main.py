@@ -44,7 +44,6 @@ async def register(request: UserCreate, db: Session = Depends(get_db)):
     Example usage:
 
         {
-            "admin": 1,
             "username": "your_username",
             "email": "your_email",
             "password": "your_password",
@@ -60,7 +59,7 @@ async def register(request: UserCreate, db: Session = Depends(get_db)):
             "message": "User created
             "data": {
                 "id": 1,
-                "admin": 1,
+                "admin": 0,
                 "username": "your_username",
                 "email": "your_email",
                 "password": "your_password",
@@ -86,8 +85,8 @@ async def login_for_access_token(request: UserLogin, db: Session = Depends(get_d
     Example usage:
 
         {
-            "username": "your_username",
-            "password": "your_password"
+            "username": "johnsmith",
+            "password": "mypassword"
         }
 
     Output:

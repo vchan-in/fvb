@@ -129,10 +129,10 @@ async def create_account_handler(db: Session, user: User) -> Account:
         2. Random 4 digit number
         3. Suffix: Timestamp format: YYYYDDHHMMSS
         '''
-        account_id = f"FVB{str(random.randint(1000, 9999))}{datetime.now().strftime('%Y%d%H%M%S')}"
+        account_id = f"FVB{str(random.randint(1000, 9999))}{datetime.now().strftime('%Y%H')}"
 
         if not user:
-            raise Exception("User not found")
+            raise ValueError("User not found")
         
         # If the account is the 1st account of the user, add 1000 to the account balance as a welcome bonus
         accounts = db.query(AccountModel).filter(AccountModel.user_id == user.id).all()

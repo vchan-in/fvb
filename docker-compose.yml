@@ -5,13 +5,14 @@ services:
     container_name: fvb_backend
     command: 'uvicorn main:app --host 0.0.0.0 --port ${FVB_BACKEND_PORT:-8000} --workers 4'
     environment:
-      FVB_DATABASE_HOST: ${FVB_DATABASE_HOST:-127.0.0.1}
+      FVB_DATABASE_HOST: ${FVB_DATABASE_HOST:-db}
       FVB_DATABASE_NAME: ${FVB_DATABASE_NAME:-fvb}
       FVB_DATABASE_USER: ${FVB_DATABASE_USER:-fvb}
       FVB_DATABASE_PASSWORD: ${FVB_DATABASE_PASSWORD:-fvb}
       FVB_BACKEND_BASEURL: ${FVB_BACKEND_BASEURL:-http://localhost}
       FVB_BACKEND_PORT: ${FVB_BACKEND_PORT:-8000}
-    network_mode: host
+    ports:
+      - "8000:8000"
     depends_on:
       - db
 
@@ -25,7 +26,8 @@ services:
         FVB_BACKEND_PORT: ${FVB_BACKEND_PORT:-8000}
     restart: always
     container_name: fvb_client
-    network_mode: host
+    ports:
+      - "8080:8080"
     depends_on:
       - backend
 

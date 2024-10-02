@@ -14,7 +14,7 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 
 from data.models import User as UserModel, Account as AccountModel, Transaction as TransactionModel
-from data.serializers import User, Account, AccountCreate, TransactionCreate, TransactionResponse,Deposit, TokenData, UserInDB
+from data.serializers import User, UserCreate, Account, AccountCreate, TransactionCreate, TransactionResponse,Deposit, TokenData, UserInDB
 from db.database import SessionLocal, Session as DBSession
 from utils.main import convert_to_utc
 
@@ -56,7 +56,7 @@ def create_access_token_handler(data: dict, expires_delta: timedelta | None = No
     return encoded_jwt
 
 # Register User Handler
-async def register_user_handler(db: Session, request: UserModel) -> User:
+async def register_user_handler(db: Session, request: UserCreate) -> User:
     '''
     Register user
     
@@ -69,6 +69,14 @@ async def register_user_handler(db: Session, request: UserModel) -> User:
         UserModel(admin=1, username="your_username", email="your_email", password="your_password", dob="your_dob", phone="your_phone", address="your_address")
     '''
     try:
+        # Check if the user already exists
+        user = db.query(UserModel).filter(UserModel.username == request.username).first()
+        if user:
+            raise ValueError("User with same username or email already exists")
+        
+        if request.admin is None:
+            request.admin = 0
+
         user = UserModel (
                 admin=request.admin,
                 username=request.username,

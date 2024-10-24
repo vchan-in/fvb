@@ -364,36 +364,39 @@ async def get_user_by_username_handler(db: Session, username: str):
     '''
     Get user by username
     '''
-    records = text(f"SELECT * FROM users WHERE username LIKE '{username}'")  ## Security Vuln: SQL Injection
-    db_results = db.execute(records)
-    if db_results.rowcount > 1:     # Deliberately checking for > 1 to return multiple records
-        records = []
-        for result in db_results:
-            result_dict = {
-                "id": result.id,
-                "email": result.email,
-                "hashed_password": result.hashed_password,
-                "phone": result.phone,
-                "admin": result.admin,
-                "username": result.username,
-                "password": result.password,
-                "dob": result.dob.isoformat() + "Z",
-                "address": result.address
+    try:
+        records = text(f"SELECT * FROM users WHERE username LIKE '{username}'")  ## Security Vuln: SQL Injection
+        db_results = db.execute(records)
+        if db_results.rowcount > 1:     # Deliberately checking for > 1 to return multiple records
+            records = []
+            for result in db_results:
+                result_dict = {
+                    "id": result.id,
+                    "email": result.email,
+                    "hashed_password": result.hashed_password,
+                    "phone": result.phone,
+                    "admin": result.admin,
+                    "username": result.username,
+                    "password": result.password,
+                    "dob": result.dob.isoformat() + "Z",
+                    "address": result.address
+                }
+                records.append(result_dict)
+        else:
+            records = db_results.fetchone()
+            records = {
+                "id": records.id,
+                "email": records.email,
+                "hashed_password": records.hashed_password,
+                "phone": records.phone,
+                "admin": records.admin,
+                "username": records.username,
+                "password": records.password,
+                "dob": records.dob.isoformat() + "Z",
+                "address": records.address
             }
-            records.append(result_dict)
-    else:
-        records = db_results.fetchone()
-        records = {
-            "id": records.id,
-            "email": records.email,
-            "hashed_password": records.hashed_password,
-            "phone": records.phone,
-            "admin": records.admin,
-            "username": records.username,
-            "password": records.password,
-            "dob": records.dob.isoformat() + "Z",
-            "address": records.address
-        }
+    except Exception as e:
+        records = e
     return records
 
 # Get all accounts of a user handler

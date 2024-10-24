@@ -271,7 +271,9 @@ async def get_users_me(authorization: Annotated[list[str] | None, Header()] = No
 # Get user by username route
 @router.get("/users/{username}", dependencies=[Depends(JWTBearer())])
 async def get_user_by_username(username: str, db: Session = Depends(get_db)):
-    user = await get_user_by_username_handler(db, username)
+    user, error = await get_user_by_username_handler(db, username)
+    if error is not None:
+        return HTTPException(detail=error)
     if user:
         return JSONResponse(status_code=200, content={"status": "success", "message": "User retrieved successfully", "data": jsonable_encoder(user)})
     return JSONResponse(status_code=404, content={"status": "error", "message": "User not found"})

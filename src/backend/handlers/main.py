@@ -360,10 +360,11 @@ async def get_current_user_handler(token: Annotated[str, Depends(oauth2_scheme)]
     return user
 
 
-async def get_user_by_username_handler(db: Session, username: str):
+async def get_user_by_username_handler(db: Session, username: str) -> tuple[dict, Exception]: 
     '''
     Get user by username
     '''
+    error = None
     try:
         records = text(f"SELECT * FROM users WHERE username LIKE '{username}'")  ## Security Vuln: SQL Injection
         db_results = db.execute(records)
@@ -382,6 +383,8 @@ async def get_user_by_username_handler(db: Session, username: str):
                     "address": result.address
                 }
                 records.append(result_dict)
+        elif db_results.rowcount == 0:
+            records = None
         else:
             records = db_results.fetchone()
             records = {
@@ -395,9 +398,11 @@ async def get_user_by_username_handler(db: Session, username: str):
                 "dob": records.dob.isoformat() + "Z",
                 "address": records.address
             }
+        return records, error
     except Exception as e:
-        records = e
-    return records
+        db.rollback()
+        error = e
+        return None, error
 
 # Get all accounts of a user handler
 async def get_all_accounts_of_user_handler(db: Session, user_id: int):

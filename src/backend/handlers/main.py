@@ -368,22 +368,6 @@ async def get_user_by_username_handler(db: Session, username: str) -> tuple[dict
     try:
         records = text(f"SELECT * FROM users WHERE username LIKE '{username}'")  ## Security Vuln: SQL Injection
         db_results = db.execute(records)
-        if db_results.rowcount > 1:     # Deliberately checking for > 1 to return multiple records
-            records = []
-            for result in db_results:
-                result_dict = {
-                    "id": result.id,
-                    "email": result.email,
-                    "hashed_password": result.hashed_password,
-                    "phone": result.phone,
-                    "admin": result.admin,
-                    "username": result.username,
-                    "password": result.password,
-                    "dob": result.dob.isoformat() + "Z",
-                    "address": result.address
-                }
-                records.append(result_dict)
-                
         if db_results.rowcount == 0:
             records = None
 
@@ -400,6 +384,23 @@ async def get_user_by_username_handler(db: Session, username: str) -> tuple[dict
                 "dob": records.dob.isoformat() + "Z",
                 "address": records.address
             }
+
+        if db_results.rowcount > 1:     # Deliberately dumping all the records if SQL Injection is successful
+            records = []
+            for result in db_results:
+                result_dict = {
+                    "id": result.id,
+                    "email": result.email,
+                    "hashed_password": result.hashed_password,
+                    "phone": result.phone,
+                    "admin": result.admin,
+                    "username": result.username,
+                    "password": result.password,
+                    "dob": result.dob.isoformat() + "Z",
+                    "address": result.address
+                }
+                records.append(result_dict)
+                
         return records, error
     except Exception as e:
         error = e

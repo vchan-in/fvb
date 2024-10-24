@@ -383,9 +383,11 @@ async def get_user_by_username_handler(db: Session, username: str) -> tuple[dict
                     "address": result.address
                 }
                 records.append(result_dict)
-        elif db_results.rowcount == 0:
+                
+        if db_results.rowcount == 0:
             records = None
-        else:
+
+        if db_results.rowcount == 1:
             records = db_results.fetchone()
             records = {
                 "id": records.id,
@@ -400,7 +402,6 @@ async def get_user_by_username_handler(db: Session, username: str) -> tuple[dict
             }
         return records, error
     except Exception as e:
-        db.rollback()
         error = e
         return None, error
 

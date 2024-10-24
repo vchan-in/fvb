@@ -1,5 +1,5 @@
 # FVB (First Vulnerable Bank)
-FVB (First Vulnerable Bank) is a deliberately insecure web application based on a banking system, designed to aid security professionals, developers, and students to learn and practice security vulnerabilities in a safe and legal environment. FVB provides a platform for penetration testing and security training. The application showcases various security flaws, which users are encouraged to identify and exploit. It's an excellent tool for learning about common security issues in web applications.
+FVB (First Vulnerable Bank) is like a Flight Simulator but for Hackers. It's a deliberately insecure web application based on a banking system, designed to help security professionals, developers, and students to learn and practice security vulnerabilities in a safe and legal environment. FVB provides a platform for penetration testing and security training. The application showcases various security flaws, which users are encouraged to identify and exploit. It's an excellent tool for learning about common security issues in web applications.
 
 The project is built using modern [technology stack](#technology-stack), providing a fresh perspective and a unique set of challenges. It's an excellent tool for learning about common security issues in web applications, how to exploit them, and more importantly, how to prevent them.
 

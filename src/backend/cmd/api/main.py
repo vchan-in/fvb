@@ -10,9 +10,8 @@ from typing import Generator, Annotated
 from data.models import User as UserModel
 from data.serializers import User, UserCreate, Token, AccountCreate, UserLogin, TransactionCreate, Deposit
 from db.database import SessionLocal
-from handlers.main import ACCESS_TOKEN_EXPIRE_MINUTES
-from handlers.main import get_user_me_handler, register_user_handler, authenticate_user_handler, get_current_user_handler, create_access_token_handler, get_user_by_username_handler, create_account_handler, get_all_accounts_of_user_handler, create_transaction_handler, create_deposit_handler, decode_jwt, get_all_transactions_of_user_handler
-from handlers.auth_bearer import JWTBearer
+from handlers.main import get_user_me_handler, register_user_handler, authenticate_user_handler, get_current_user_handler, create_access_token_handler, get_user_by_username_handler, create_account_handler, get_all_accounts_of_user_handler, create_transaction_handler, create_deposit_handler, get_all_transactions_of_user_handler
+from handlers.auth_bearer import ACCESS_TOKEN_EXPIRE_MINUTES, JWTBearer
 
 
 def get_db() -> Generator[Session, None, None]:
@@ -126,9 +125,9 @@ async def verify_token(request: Token) -> JSONResponse:
         }
     '''
     try:
-        is_token_valid = decode_jwt(request.access_token)
+        is_token_valid = JWTBearer.validate_jwt(request.access_token)
         if not is_token_valid:
-            raise Exception("Token is invalid")
+            raise Exception("Token is not invalid")
         return JSONResponse(status_code=200, content={"status": "success", "message": "Token is valid"})
     except Exception as e:
         return JSONResponse(status_code=400, content={"status": "error", "message": str(e)})

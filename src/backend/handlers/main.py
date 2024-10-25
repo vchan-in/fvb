@@ -3,14 +3,12 @@ from typing import Annotated
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy import or_, text
 from sqlalchemy.orm import Session
-from jose import JWTError, jwt
 import random
+from jose import JWTError, jwt
 
 from datetime import datetime, timedelta, timezone
 from typing import Annotated
-from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from jose import JWTError, jwt
 from passlib.context import CryptContext
 
 from data.models import User as UserModel, Account as AccountModel, Transaction as TransactionModel
@@ -18,14 +16,11 @@ from data.serializers import User, UserCreate, Account, AccountCreate, Transacti
 from db.database import SessionLocal, Session as DBSession
 from utils.main import convert_to_utc
 
+from handlers.auth_bearer import SECRET_KEY, ALGORITHM
+
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-# to get a string like this run:
-# openssl rand -hex 32
-SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
-ALGORITHM = "HS256"     # SecurityVuln: Weak algorithm used for encoding the JWT token
-ACCESS_TOKEN_EXPIRE_MINUTES = 1440
 
 #
 #
@@ -146,7 +141,7 @@ async def create_account_handler(db: Session, user: User) -> Account:
             balance=balance,
             user_id=user.id
         )
-        db.add(account)     ## SecurityVuln: User can create accounts without limit due to missing limit check which was 5 accounts per user
+        db.add(account)     ## BusinessVuln: User can create accounts without limit due to missing limit check which was 5 accounts per user
         db.commit()
         db.refresh(account)
         return account
@@ -184,7 +179,7 @@ async def create_transaction_handler(db: Session, request: TransactionCreate, us
         
         if not from_account or not to_account:
             raise Exception("Account not found")
-        # if from_account.balance < request.amount:  ## Security Vuln: Commented out to allow negative balance
+        # if from_account.balance < request.amount:  ## BusinessVuln: Commented out to allow negative balance
         #     raise Exception("Insufficient balance")
 
         from_account.balance -= request.amount
@@ -307,15 +302,6 @@ async def authenticate_user_handler(db, username: str, password: str):
 
 def verify_password_handler(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
-
-def decode_jwt(token: str):
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        return payload
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=403, detail="Token has expired")
-    except jwt.InvalidTokenError:
-        raise HTTPException(status_code=403, detail="Invalid token")
 
 
 def get_password_hash_handler(password):

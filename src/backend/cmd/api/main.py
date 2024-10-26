@@ -10,7 +10,7 @@ from typing import Generator, Annotated
 from data.models import User as UserModel
 from data.serializers import User, UserCreate, Token, AccountCreate, UserLogin, TransactionCreate, Deposit
 from db.database import SessionLocal
-from handlers.main import get_user_me_handler, register_user_handler, authenticate_user_handler, get_current_user_handler, create_access_token_handler, get_user_by_username_handler, create_account_handler, get_all_accounts_of_user_handler, create_transaction_handler, create_deposit_handler, get_all_transactions_of_user_handler
+from handlers.main import get_user_me_handler, register_user_handler, authenticate_user_handler, create_access_token_handler, get_user_by_username_handler, create_account_handler, create_transaction_handler, create_deposit_handler, get_all_transactions_of_user_handler, get_all_accounts_of_user_handler
 from handlers.auth_bearer import ACCESS_TOKEN_EXPIRE_MINUTES, JWTBearer
 
 
@@ -307,9 +307,11 @@ async def get_my_accounts(db: Session = Depends(get_db), authorization: Annotate
 # Get accouts by username route
 @router.get("/accounts/{username}", dependencies=[Depends(JWTBearer())])
 async def get_accounts_by_username(username: str, db: Session = Depends(get_db)):
-    user = await get_user_by_username_handler(db, username)
+    user, error = await get_user_by_username_handler(db, username)
+    if error:
+        return JSONResponse(status_code=400, content={"status": "error", "message": error})
     if user:
-        accounts = await get_all_accounts_of_user_handler(db, user.id)
+        accounts = await get_all_accounts_of_user_handler(db, user.get("id"))
         if accounts:
             return JSONResponse(status_code=200, content={"status": "success", "message": "Accounts retrieved successfully", "data": jsonable_encoder(accounts)})
     return JSONResponse(status_code=404, content={"status": "error", "message": "Accounts not found"})

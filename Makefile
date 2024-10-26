@@ -34,24 +34,29 @@ client-android: # ToDo: To rework on this
 
 docker:
 	@echo "Starting docker containers with build..."
-	docker-compose down
-	docker compose build
+	-@docker-compose down
+	-@docker compose build
 	docker compose up -d
 
 docker-dev:
 	@echo "Starting docker dev containers with build..."
-	docker-compose down
-	docker compose build --no-cache
+	-@docker-compose down
+	-@docker compose build --no-cache
 	docker compose up -d
+
+docker-dev-db:
+	@echo "Starting docker dev containers with build..."
+	-@docker-compose down db phpmyadmin
+	docker compose up -d db phpmyadmin
 
 docker-dev-client:
 	@echo "Starting docker dev containers with build..."
-	docker-compose down client
-	docker compose build client --no-cache
+	-@docker-compose down client
+	-@docker compose build client --no-cache
 	docker compose up -d client
 
 docker-dev-backend:
 	@echo "Starting docker dev containers with build..."
-	docker-compose down backend
-	docker compose build backend --no-cache
+	-@docker-compose down backend
+	-@docker compose build backend --no-cache
 	docker compose up -d backend

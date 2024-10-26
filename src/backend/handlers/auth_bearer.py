@@ -19,12 +19,22 @@ class JWTBearer(HTTPBearer):
                 raise HTTPException(status_code=403, detail="Invalid authentication scheme.")
             if not self.validate_jwt(credentials.credentials):
                 raise HTTPException(status_code=403, detail="Invalid token")
-            # if not self.validate_jwt_expired(credentials.credentials):
+            # if not self.validate_jwt_expired(credentials.credentials):        # SecurityVuln: No token expiration check
             #     raise HTTPException(status_code=403, detail="Token expired")
             return credentials.credentials
         else:
             raise HTTPException(status_code=403, detail="Invalid authorization code.")
     
+    @staticmethod
+    def decode_jwt(token):
+        try:
+            # Decode and verify the JWT token
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM], options={"verify_exp": False})
+            return payload
+        except JWTError:
+            # Handle the error if the token is invalid
+            return None
+        
     @staticmethod
     def validate_jwt(token):
         try:

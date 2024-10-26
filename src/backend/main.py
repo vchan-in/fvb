@@ -12,6 +12,7 @@ from handlers.gql import graphql_app
 FVB_BACKEND_BASEURL = os.getenv("FVB_BACKEND_BASEURL", "http://127.0.0.1")
 FVB_BACKEND_PORT = os.getenv("FVB_BACKEND_PORT", "8000")
 FVB_BACKEND_BASEURLPORT = f"{FVB_BACKEND_BASEURL}:{FVB_BACKEND_PORT}"
+FVB_CORS_ORIGIN_URL = str(os.getenv("FVB_CORS_ORIGIN_URL"))
 
 methods = ["GET", "POST", "DELETE", "OPTIONS", "PUT", "PATCH"]
 
@@ -26,7 +27,7 @@ app = FastAPI(
         ],
     )
 
-origins = ['http://localhost:8080', 'http://127.0.0.1:8080',FVB_BACKEND_BASEURL+':8080']
+origins = ['http://localhost:8080', 'http://127.0.0.1:8080',FVB_BACKEND_BASEURL+':8080', FVB_CORS_ORIGIN_URL+':8080']
 
 app.add_middleware(
     CORSMiddleware,

@@ -16,7 +16,7 @@ from data.serializers import User, UserCreate, Account, AccountCreate, Transacti
 from db.database import SessionLocal, Session as DBSession
 from utils.main import convert_to_utc
 
-from handlers.auth_bearer import SECRET_KEY, ALGORITHM
+from handlers.auth_bearer import SECRET_KEY, ALGORITHM, JWTBearer
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -314,14 +314,14 @@ async def get_user_handler(db, username: str) -> UserModel:
 
 async def get_user_me_handler(token: str) -> User:
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = JWTBearer.decode_jwt(token)
         username: str = payload.get("sub")
         if username is None:
             raise Exception("Username not found")
-        token_data = TokenData(username=username)
     except JWTError:
-        raise Exception("JWT error")
-    user = await get_user_handler(DBSession, username=token_data.username)
+        raise Exception("Invalid token")
+    
+    user = await get_user_handler(DBSession, username)
     if user is None:
         raise Exception("User not found")
     return user

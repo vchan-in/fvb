@@ -25,7 +25,8 @@ class JWTBearer(HTTPBearer):
         else:
             raise HTTPException(status_code=403, detail="Invalid authorization code.")
     
-    def validate_jwt(self, token):
+    @staticmethod
+    def validate_jwt(token):
         try:
             # Decode and verify the JWT token
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM], options={"verify_exp": False})
@@ -35,7 +36,8 @@ class JWTBearer(HTTPBearer):
             # Handle the error if the token is invalid
             return None
         
-    def validate_jwt_expired(self, token):
+    @staticmethod
+    def validate_jwt_expired(token):
         try:
             # Decode and verify the JWT token
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])

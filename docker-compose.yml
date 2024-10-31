@@ -4,8 +4,8 @@ services:
     restart: always
     container_name: fvb_nginx
     ports:
-      - "8443:8443" # Client
-      - "9443:9443" # Backend
+      - "8443:8443" # Client on HTTPS
+      - "8000:8000" # Backend on HTTPS
     volumes:
       - ./src/nginx/fvb.conf:/etc/nginx/conf.d/fvb.conf:ro
     depends_on:
@@ -24,7 +24,7 @@ services:
       FVB_DATABASE_PASSWORD: ${FVB_DATABASE_PASSWORD:-fvb}
       FVB_BACKEND_BASEURL: ${FVB_BACKEND_BASEURL:-http://localhost}
       FVB_BACKEND_PORT: ${FVB_BACKEND_PORT:-8000}
-      FVB_CORS_ORIGIN_URL: ${FVB_CORS_ORIGIN_URL:-http://127.0.0.1:9500}
+      FVB_CORS_ORIGINS: ${FVB_CORS_ORIGINS:-["http://127.0.0.1:9500"]}
     ports:
       - "8000:8000"
     depends_on:

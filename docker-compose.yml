@@ -1,4 +1,17 @@
 services:
+  nginx:
+    build: ./src/nginx
+    restart: always
+    container_name: fvb_nginx
+    ports:
+      - "8443:8443" # Client
+      - "9443:9443" # Backend
+    volumes:
+      - ./src/nginx/fvb.conf:/etc/nginx/conf.d/fvb.conf:ro
+    depends_on:
+      - client
+      - backend
+
   backend:
     build: ./src/backend
     restart: always

@@ -12,7 +12,8 @@ from handlers.gql import graphql_app
 FVB_BACKEND_BASEURL = os.getenv("FVB_BACKEND_BASEURL", "http://127.0.0.1")
 FVB_BACKEND_PORT = os.getenv("FVB_BACKEND_PORT", "8000")
 FVB_BACKEND_BASEURLPORT = f"{FVB_BACKEND_BASEURL}:{FVB_BACKEND_PORT}"
-FVB_CORS_ORIGIN_URLPORT = os.getenv("FVB_CORS_ORIGIN_URLPORT")
+FVB_CORS_ORIGINS = os.getenv("FVB_CORS_ORIGINS")   
+
 
 methods = ["GET", "POST", "DELETE", "OPTIONS", "PUT", "PATCH"]
 
@@ -27,7 +28,25 @@ app = FastAPI(
         ],
     )
 
-origins = ['http://localhost:8080', 'http://127.0.0.1:8080',FVB_BACKEND_BASEURL+':8080', FVB_CORS_ORIGIN_URLPORT]
+origins = [
+    'http://localhost',
+    'https://localhost',
+    'http://localhost:8080',
+    'http://127.0.0.1:8080',
+    'https://localhost:8443',
+    FVB_BACKEND_BASEURL+':8080'
+    ]
+
+if FVB_CORS_ORIGINS:
+    '''
+    If the FVB_CORS_ORIGINS environment variable is set, we will add the origins to the list of allowed origins
+    '''
+    for origin in FVB_CORS_ORIGINS:
+        if origin not in origins:
+            origins.append(origin)
+
+# Remove duplicates from the list of origins
+origins = list(set(origins))
 
 app.add_middleware(
     CORSMiddleware,

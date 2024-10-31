@@ -12,6 +12,7 @@ const { configure } = require('quasar/wrappers');
 const path = require('path');
 
 const env = require('dotenv').config({ path: '.env' }).parsed;
+const envparser = require('./src/envparser')
 
 module.exports = configure(function (/* ctx */) {
   return {
@@ -65,11 +66,7 @@ module.exports = configure(function (/* ctx */) {
 
       // publicPath: '/',
       // analyze: true,
-      env: {
-        FVB_BACKEND_BASEURL: process.env.FVB_BACKEND_BASEURL,
-        FVB_BACKEND_PORT: process.env.FVB_BACKEND_PORT,
-        ...env,
-      },
+      env: envparser(), // will parse arguments from .env file 
       // rawDefine: {}
       // ignorePublicFolder: true,
       minify: true,

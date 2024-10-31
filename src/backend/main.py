@@ -28,7 +28,14 @@ app = FastAPI(
         ],
     )
 
-origins = ['http://localhost:8080', 'http://127.0.0.1:8080',FVB_BACKEND_BASEURL+':8080']
+origins = [
+    'http://localhost',
+    'https://localhost',
+    'http://localhost:8080',
+    'http://127.0.0.1:8080',
+    'https://localhost:8443',
+    FVB_BACKEND_BASEURL+':8080'
+    ]
 
 if FVB_CORS_ORIGINS:
     '''
@@ -37,6 +44,9 @@ if FVB_CORS_ORIGINS:
     for origin in FVB_CORS_ORIGINS:
         if origin not in origins:
             origins.append(origin)
+
+# Remove duplicates from the list of origins
+origins = list(set(origins))
 
 app.add_middleware(
     CORSMiddleware,

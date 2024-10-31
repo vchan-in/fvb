@@ -11,6 +11,7 @@ services:
       FVB_DATABASE_PASSWORD: ${FVB_DATABASE_PASSWORD:-fvb}
       FVB_BACKEND_BASEURL: ${FVB_BACKEND_BASEURL:-http://localhost}
       FVB_BACKEND_PORT: ${FVB_BACKEND_PORT:-8000}
+      FVB_CORS_ORIGIN_URL: ${FVB_CORS_ORIGIN_URL:-http://127.0.0.1:9500}
     ports:
       - "8000:8000"
     depends_on:

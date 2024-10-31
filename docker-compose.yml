@@ -5,7 +5,7 @@ services:
     container_name: fvb_nginx
     ports:
       - "8443:8443" # Client on HTTPS
-      - "8000:8000" # Backend on HTTPS
+      - "9443:9443" # Backend on HTTPS
     volumes:
       - ./src/nginx/fvb.conf:/etc/nginx/conf.d/fvb.conf:ro
     depends_on:

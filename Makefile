@@ -52,6 +52,12 @@ docker-dev-db:
 	-@docker-compose rm db phpmyadmin -f
 	docker compose up -d db phpmyadmin
 
+docker-dev-nginx:
+	@echo "Starting docker dev containers with build..."
+	-@docker-compose stop nginx
+	-@docker-compose rm nginx -f
+	docker compose up -d nginx
+
 docker-dev-client:
 	@echo "Starting docker dev containers with build..."
 	-@docker compose stop client

@@ -1,0 +1,15 @@
+// Inspired from https://stackoverflow.com/questions/54108886/is-there-a-way-to-pass-environment-variables-to-the-quasar-from-console
+
+const parsedEnv = require('dotenv').config({ path: '.env' }).parsed;
+
+module.exports = function () {
+
+    const argEnv = {}
+    process.argv.forEach((v, k) => {
+        if (v.indexOf('--env.') === 0) {
+            argEnv[v.substring(6)] = process.argv[k + 1]
+        }
+    })
+
+    return { ...parsedEnv, ...argEnv };
+}

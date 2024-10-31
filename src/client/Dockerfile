@@ -16,7 +16,7 @@ FROM develop-stage AS local-deps-stage
 RUN yarn install
 
 FROM local-deps-stage AS build-pwa-stage
-RUN FVB_BACKEND_BASEURL=${FVB_BACKEND_BASEURL} FVB_BACKEND_PORT=${FVB_BACKEND_PORT} quasar build -m pwa
+RUN quasar build -m pwa --env.FVB_BACKEND_BASEURL ${FVB_BACKEND_BASEURL} --env.FVB_BACKEND_PORT ${FVB_BACKEND_PORT}
 
 FROM nginx:stable-alpine AS prod-pwa-stage
 RUN mkdir /etc/nginx/templates
